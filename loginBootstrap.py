@@ -3,5 +3,6 @@ import ttkbootstrap as ttk
 pantalla = ttk.Window(themename="darkly")
 
 print("hola")
-print("chau2")
+print("q")
+print("chau4")
 pantalla.mainloop()
