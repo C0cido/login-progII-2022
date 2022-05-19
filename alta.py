@@ -1,6 +1,6 @@
 import ttkbootstrap as ttk
 import json
-import contra as encriptado
+from werkzeug.security import generate_password_hash,check_password_hash
 from tkinter import messagebox as ms
 
 pantalla = ttk.Window(themename="darkly")
@@ -22,8 +22,7 @@ def agregarUsuario():
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         nuevoUsuario = {}
         nuevoUsuario["Usuario"] = varNombre.get() 
-        contra = encriptado.f.encrypt(str.encode(varContra.get()))
-        nuevoUsuario["Contra"] = contra.decode("utf_8")
+        nuevoUsuario["Contra"] = generate_password_hash(varContra.get())
         lstUsuario.append(nuevoUsuario)
         with open("contra.json","w") as lst:
             json.dump(lstUsuario,lst)

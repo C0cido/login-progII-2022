@@ -1,7 +1,6 @@
-from base64 import encode
 import ttkbootstrap as ttk
 import json
-import contra as encriptado
+from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 
 pantalla = ttk.Window(themename="darkly")
@@ -22,8 +21,8 @@ def login():
         lstUsuario = []
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         for i in lstUsuario:
-            contra = (str.encode(i["Contra"]))
-            print(encriptado.f.decrypt(contra))
+            if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
+                print("HOLAAAAAAAAAAAAAAAAAA")
     else:
         ms.showerror("Error","Ingrese la informacion necesaria")
 
