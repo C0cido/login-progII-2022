@@ -1,11 +1,8 @@
-
-from calendar import c
-from encodings import utf_8
 import ttkbootstrap as ttk
 import json
 import probandoContra as encriptado
 
-pantalla = ttk.Window(themename="darkly")
+pantalla = ttk.Window()
 pantalla.title("Probando")
 pantalla.geometry("400x400")
 
@@ -21,13 +18,13 @@ def agregarUsuario():
             lstUsuario=json.load(lst)
     except:
         lstUsuario = []
-    else:
-        nuevoUsuario = {}
-        nuevoUsuario["Usuario"] = varNombre.get()
-        nuevoUsuario["Contra"] = encriptado.f.encrypt(bytes(varContra.get(),"utf_8"))
-        lstUsuario.append(nuevoUsuario)
-        with open("contra.json","w") as lst:
-            json.dump(lstUsuario,lst)
+    nuevoUsuario = {}
+    nuevoUsuario["Usuario"] = varNombre.get() 
+    contra = encriptado.f.encrypt(bytes(varContra.get(),"utf_8"))
+    nuevoUsuario["Contra"] = contra.decode("utf_8")
+    lstUsuario.append(nuevoUsuario)
+    with open("contra.json","w") as lst:
+        json.dump(lstUsuario,lst)
 
 #Nombre
 ttk.Label(pantalla,text="Nombre").place(x=20,y=20)
