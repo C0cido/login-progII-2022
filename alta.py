@@ -1,7 +1,8 @@
 import ttkbootstrap as ttk
 import json
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash
 from tkinter import messagebox as ms
+import funciones as fn
 
 pantalla = ttk.Window(themename="darkly")
 pantalla.title("Alta de usuarios")
@@ -13,12 +14,7 @@ varContra = ttk.StringVar(pantalla,"")
 
 #funciones
 def agregarUsuario():
-    lstUsuario = []
-    try:
-        with open("contra.json") as lst:
-            lstUsuario=json.load(lst)
-    except:
-        lstUsuario = []
+    lstUsuario = fn.abrirArchivo("usuarios.json")
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         nuevoUsuario = {}
         nuevoUsuario["Usuario"] = varNombre.get() 

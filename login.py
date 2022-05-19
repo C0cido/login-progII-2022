@@ -2,6 +2,7 @@ import ttkbootstrap as ttk
 import json
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
+import funciones as fn
 
 pantalla = ttk.Window(themename="darkly")
 pantalla.title("Login de usuarios")
@@ -13,12 +14,7 @@ varContra = ttk.StringVar(pantalla,"")
 
 #funciones
 def login():
-    lstUsuario = []
-    try:
-        with open("contra.json") as lst:
-            lstUsuario=json.load(lst)
-    except:
-        lstUsuario = []
+    lstUsuario = fn.abrirArchivo("usuarios.json")
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         for i in lstUsuario:
             if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
