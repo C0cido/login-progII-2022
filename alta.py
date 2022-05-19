@@ -22,7 +22,7 @@ def agregarUsuario():
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         nuevoUsuario = {}
         nuevoUsuario["Usuario"] = varNombre.get() 
-        contra = encriptado.f.encrypt(bytes(varContra.get(),"utf_8"))
+        contra = encriptado.f.encrypt(str.encode(varContra.get()))
         nuevoUsuario["Contra"] = contra.decode("utf_8")
         lstUsuario.append(nuevoUsuario)
         with open("contra.json","w") as lst:
