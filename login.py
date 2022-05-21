@@ -1,5 +1,4 @@
 import ttkbootstrap as ttk
-import json
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 import funciones as fn
@@ -14,11 +13,13 @@ varContra = ttk.StringVar(pantalla,"")
 
 #funciones
 def login():
-    lstUsuario = fn.abrirArchivo("usuarios.json")
+    lstUsuario = fn.abrirArchivo("archivosJSON/usuarios.json")
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         for i in lstUsuario:
             if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
                 print("HOLAAAAAAAAAAAAAAAAAA")
+            else:
+                print("puto")
     else:
         ms.showerror("Error","Ingrese la informacion necesaria")
 
