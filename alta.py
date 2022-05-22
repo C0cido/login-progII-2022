@@ -13,8 +13,12 @@ varNombre = ttk.StringVar(pantalla,"")
 varContra = ttk.StringVar(pantalla,"")
 
 #funciones
+def agregarEmpleado():
+    lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
+#completar la funcion para generar dos archivos json (1. para usuario y contraseña 2.para la informacion del empleado)
+
 def agregarUsuario():
-    lstUsuario = fn.abrirArchivo("usuarios.json")
+    lstUsuario = fn.abrirArchivo("archivosJSON/usuarios.json")
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0: 
         nuevoUsuario = {}
         nuevoUsuario["Usuario"] = varNombre.get() 
