@@ -8,8 +8,11 @@ lstUsuarios = []
 try:
     with open ("empleados.json") as empleados:
         lstEmpleados = json.load(empleados)
+    with open ("usuarios.json") as usuarios:
+        lstUsuarios = json.load(usuarios)
 except:
     lstEmpleados = []
+    lstUsuarios = []
 
 altaEmpleados = ttk.Window(themename="darkly")
 altaEmpleados.title("Alta de Empleados")
@@ -61,15 +64,15 @@ def fRegistrarEmpleado():
         lstEmpleados.append(nEmpleado)
         with open("empleados.json", "w") as empleados:
             json.dump(lstEmpleados, empleados)
-        with open("usuario.json") as usuarios:
-            lstUsuario
         msg.showinfo("Registro", "Registro exitoso.")
         nUsuario = {}
         nUsuario["IDUsuario"] = idVinculada
         nUsuario["Nombre"] = varNombre.get() + " " + varApellido.get()
         nUsuario["Contra"] = wz.generate_password_hash(varDNI.get())
+        lstUsuarios.append(nUsuario)
+        with open("usuarios.json", "w") as usuarios:
+            json.dump(lstUsuarios, usuarios)
     else:
-        print(len(varDNI.get()))
         if (varNombre.get().isalpha == False) and (varApellido.get() == False):
             msg.showerror("Registro", "El nombre solo puede contener letras.")
         elif varDNI.get().isdigit == False:
