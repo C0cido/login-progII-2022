@@ -61,13 +61,15 @@ def fRegistrarEmpleado():
             json.dump(lstEmpleados, empleados)
     else:
         if (varNombre.get().isalpha == False) and (varApellido.get() == False):
-            msg.showerror("Registro", "El nombre solo puede contener letras")
+            msg.showerror("Registro", "El nombre solo puede contener letras.")
         elif str(varDNI.get()).isdigit == False:
-            msg.showerror("Registro", "El DNI solo puede contener números")
+            msg.showerror("Registro", "El DNI solo puede contener números.")
         elif len(varDNI.get()) != 8:
-            msg.showerror("Registro", "El DNI solo puede tener 8 números")
+            msg.showerror("Registro", "El DNI solo puede tener 8 números.")
         elif str(varCUIL.get()).isdigit == False:
-            pass
+            msg.showerror("Registro", "El CUIL solo puede contener números.")
+        elif len(varCUIL.get()) != 11:
+            msg.showerror("Registro", "El CUIL solo puede tener 11 números.")
 
 ttk.Label(altaEmpleados, text="Nombre:").place(x=150, y=100)
 varNombre = ttk.StringVar()
@@ -85,7 +87,6 @@ ttk.Label(altaEmpleados, text="CUIL:").place(x=150, y=420)
 varCUIL = ttk.IntVar()
 ttk.Entry(altaEmpleados).place(x=150, y=460)
 ttk.Label(altaEmpleados, text="Sector:").place(x=150, y=500)
-#sectores: compras, ventas, stock
 lstSectores = []
 cmbSector = ttk.Combobox(altaEmpleados, values=lstSectores, state="readonly")
 cmbSector.place(x=150, y=540)
