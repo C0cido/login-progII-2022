@@ -3,10 +3,11 @@ import ttkbootstrap as ttk
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 import funciones as fn
+import abriMenues as menu
 
-pantalla = ttk.Window(themename="darkly")
+pantalla = ttk.Window()
 pantalla.title("Login de usuarios")
-pantalla.geometry("280x180")
+pantalla.geometry("400x300")
 
 #Recordar contraseña
 lstRecordar = fn.abrirArchivo("recordarme.json")
@@ -21,11 +22,12 @@ varRecordar = ttk.BooleanVar(pantalla,guardar)
 
 #funciones
 def recordar():
-    if varRecordar.get() or guardar:
+    if varRecordar.get():
         lstRecordar[0]["Usuario"]= varNombre.get()
         lstRecordar[0]["Guardar"] = True
     else:
         lstRecordar[0]["Usuario"]= ""
+        lstRecordar[0]["Guardar"] = False
     with open("recordarme.json","w") as recordar:
         json.dump(lstRecordar,recordar)
 
@@ -36,10 +38,12 @@ def login():
         for i in lstUsuario:
             if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
                 encontrado = True
-                id = i["IDUsuario"]
+                idBuscar = i["IDUsuario"]
                 break
         if encontrado:
             recordar()
+            pantalla.destroy()
+            menu.buscarEmpleado(idBuscar)            
         else:
             ms.showinfo("Usuario no encontrado","El usuario o la contraseña no son correctas")
     else:
@@ -48,20 +52,20 @@ def login():
 #Nombre
 ttk.Label(pantalla,text="Nombre").place(x=20,y=20)
 entNombre = ttk.Entry(pantalla,textvariable=varNombre)
-entNombre.place(x=120,y=20)
+entNombre.place(x=150,y=20)
 entNombre.focus()
 
 #contra
-ttk.Label(pantalla,text="Contra").place(x=20,y=60)
+ttk.Label(pantalla,text="Contra").place(x=20,y=80)
 entContra = ttk.Entry(pantalla,textvariable=varContra)
-entContra.place(x=120,y=60)
+entContra.place(x=150,y=80)
 
 #Recordarme
-ttk.Checkbutton(pantalla,text="Recordarme",variable=varRecordar,offvalue=False,onvalue=True).place(x=100,y=100)
+ttk.Checkbutton(pantalla,text="Recordarme",variable=varRecordar,offvalue=False,onvalue=True).place(x=130,y=130)
 
 #buton cargar datos
 btnCargar = ttk.Button(pantalla,command=login,text="Loguear")
-btnCargar.place(x=108,y=140)
+btnCargar.place(x=150,y=180)
 
 #Inciar
 pantalla.mainloop()

@@ -15,18 +15,16 @@ def altaProducto():
         alta = ttk.Toplevel(title="Alta de productos")
         alta.geometry("400x350")
         
-        
         #variables
         varNombreProducto = ttk.StringVar(alta,"")
         varProveedor = ttk.StringVar(alta,"")
-        varFechaCompra = ttk.StringVar(alta,"")
         varCantidad = ttk.StringVar(alta,"")
         varPrecio = ttk.StringVar(alta,"")
 
+        #funcion que permite agregar cantidad de productos a la lista compra y inventario, y si estan agregando alguno repetido, se lo suma a la lista de inventario
         def confirmarCompra():
             alta.focus()
-            varFechaCompra.set(datetime.datetime.today())
-            if len(varNombreProducto.get())>0 and  len(varProveedor.get())>0 and len(varFechaCompra.get())>0 and len(varCantidad.get())>0 and len(varPrecio.get())>0:
+            if len(varNombreProducto.get())>0 and  len(varProveedor.get())>0  and len(varCantidad.get())>0 and len(varPrecio.get())>0:
                 if (varPrecio.get()).isdigit() and (varCantidad.get()).isdigit():
                     #registrar compra
                     lstCompra = fn.abrirArchivo("archivosJSON/compras.json")
@@ -36,12 +34,12 @@ def altaProducto():
                     nuevaCompra["cantProducto"] = int(varCantidad.get())
                     nuevaCompra["Precio"] = (float(varPrecio.get())).__round__(2)
                     nuevaCompra["NombreProveedor"] = varProveedor.get()
-                    nuevaCompra["FechaCompra"] = varFechaCompra.get()
+                    nuevaCompra["FechaCompra"] = str(datetime.datetime.today())
                     lstCompra.append(nuevaCompra)
                     with open("archivosJSON/compras.json","w") as compra:
                         json.dump(lstCompra,compra)
 
-                    #dar alta producto en inventario
+                    #dar alta producto en inventario o sumarlo
                     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
                     repetido = False
                     for i in lstInventario:
@@ -56,22 +54,16 @@ def altaProducto():
                         lstInventario.append(nuevoProducto)
                     with open("archivosJSON/inventario.json","w") as inventario:
                         json.dump(lstInventario,inventario)
-                    ms.showinfo("Operacion realizada","el registro de compra se realizado con existo")
-                    for i in tblInventario.get_children():
-                        tblInventario.delete(i)
-
                     actualizarTabla(tblInventario)
+                    ms.showinfo("Operacion realizada","el registro de compra se realizado con existo")
                     varCantidad.set("")
-                    varFechaCompra.set("")
                     varNombreProducto.set("")
                     varPrecio.set("")
                     varProveedor.set("")
                 else:
-                    if ms.showerror("Error","La cantidad de productos o el precio solo puede ser numerica"):
-                        alta.focus()
+                    if ms.showerror("Error","La cantidad de productos o el precio solo puede ser numerica"):    alta.focus()
             else:   
-                if ms.showerror("Error","La casillas no pueden estar vacias"):
-                    alta.focus()
+                if ms.showerror("Error","La casillas no pueden estar vacias"):  alta.focus()
 
         #nombre proveedor
         ttk.Label(alta,text="Proveedor").place(x=20,y=20)
@@ -95,13 +87,18 @@ def altaProducto():
         ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=150,y=200)
 
 def actualizarTabla(tbl):
+    for i in tbl.get_children():
+                        tbl.delete(i)
     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
     for i in lstInventario:
         tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["NombreProducto"],i["CantProducto"]))
 
 #estructura del menu de compras
 def menuCompras():
-    menu = ttk.Window(themename="darkly")
+    try:
+        menu = ttk.Window()
+    except:
+        menu = ttk.Window()
     menu.geometry("850x500")
     menu.title("Sector compras")
 
@@ -126,4 +123,3 @@ def menuCompras():
     btnAlta.place(x=650,y=120)
 
     menu.mainloop()
-menuCompras()
