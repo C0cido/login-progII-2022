@@ -11,24 +11,21 @@ pantalla.geometry("280x180")
 #Recordar contraseña
 lstRecordar = fn.abrirArchivo("recordarme.json")
 nombre= lstRecordar[0]["Usuario"]
-contra = lstRecordar[0]["Contra"]
 guardar = lstRecordar[0]["Guardar"]
 
 
 #variables
 varNombre = ttk.StringVar(pantalla,nombre)
-varContra = ttk.StringVar(pantalla,contra)
+varContra = ttk.StringVar(pantalla,"")
 varRecordar = ttk.BooleanVar(pantalla,guardar) 
 
 #funciones
 def recordar():
     if varRecordar.get() or guardar:
         lstRecordar[0]["Usuario"]= varNombre.get()
-        lstRecordar[0]["Contra"]= varContra.get()
         lstRecordar[0]["Guardar"] = True
     else:
         lstRecordar[0]["Usuario"]= ""
-        lstRecordar[0]["Contra"]= ""
     with open("recordarme.json","w") as recordar:
         json.dump(lstRecordar,recordar)
 
@@ -37,8 +34,9 @@ def login():
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0:
         encontrado = False 
         for i in lstUsuario:
-            if i["IDUsuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
+            if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
                 encontrado = True
+                id = i["IDUsuario"]
                 break
         if encontrado:
             recordar()
