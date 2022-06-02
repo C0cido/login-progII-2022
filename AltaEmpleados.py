@@ -1,6 +1,7 @@
 import ttkbootstrap as ttk
 import json
 import tkinter.messagebox as msg
+import werkzeug.security as wz
 
 lstEmpleados = []
 lstUsuarios = []
@@ -66,8 +67,7 @@ def fRegistrarEmpleado():
         nUsuario = {}
         nUsuario["IDUsuario"] = idVinculada
         nUsuario["Nombre"] = varNombre.get() + " " + varApellido.get()
-        nUsuario["Contra"] = varDNI.get()
-
+        nUsuario["Contra"] = wz.generate_password_hash(varDNI.get())
     else:
         print(len(varDNI.get()))
         if (varNombre.get().isalpha == False) and (varApellido.get() == False):
