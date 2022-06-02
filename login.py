@@ -37,7 +37,7 @@ def login():
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0:
         encontrado = False 
         for i in lstUsuario:
-            if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
+            if i["IDUsuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
                 encontrado = True
                 break
         if encontrado:
