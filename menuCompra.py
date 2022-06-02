@@ -4,7 +4,6 @@ import funciones as fn
 from tkinter import messagebox as ms
 import datetime
 
-
 #crea top level, el cual permite agregar, modificar, eliminar productos
 def altaProducto():
     global alta
@@ -12,8 +11,8 @@ def altaProducto():
         if alta.state() == "normal":
             alta.focus()
     except:
-        alta = ttk.Toplevel(title="Alta de productos")
-        alta.geometry("400x350")
+        alta = ttk.Toplevel(title="")
+        alta.geometry("600x400")
         
         #variables
         varNombreProducto = ttk.StringVar(alta,"")
@@ -67,24 +66,27 @@ def altaProducto():
 
         #nombre proveedor
         ttk.Label(alta,text="Proveedor").place(x=20,y=20)
-        entProv = ttk.Entry(alta,textvariable=varProveedor)
-        entProv.place(x=150,y=20)
-        entProv.focus()
+        ttk.Combobox(alta,values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS")).place(x=210,y=20)
 
         #nombre producto
-        ttk.Label(alta,text="Producto").place(x=20,y=60)
-        ttk.Entry(alta,textvariable=varNombreProducto).place(x=150,y=60)
+        ttk.Label(alta,text="Producto").place(x=20,y=80)
+        ttk.Entry(alta,textvariable=varNombreProducto).place(x=210,y=80)
 
         #cantidad producto
-        ttk.Label(alta,text="Cant. Producto").place(x=20,y=100)
-        ttk.Entry(alta,textvariable=varCantidad).place(x=150,y=100)
+        ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=140)
+        ttk.Entry(alta,textvariable=varCantidad).place(x=210,y=140)
 
-        #precio total
-        ttk.Label(alta,text="Precio").place(x=20,y=140)
-        ttk.Entry(alta,textvariable=varPrecio).place(x=150,y=140)
+        #combobox tipo
+        ttk.Label(alta,text="Tipo").place(x=20,y=220)
+        ttk.Combobox(alta,values=("Digital","Fisico")).place(x=210,y=220)
+
+        #combobox de categorias
+        ttk.Label(alta,text="Categorias").place(x=20,y=280)
+        ttk.Combobox(alta,values=("Terror","Deporte","Accion","FPS","RPG","Aventura")).place(x=210,y=280)
 
         #buton confirmar compra
-        ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=150,y=200)
+        ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=210,y=333)
+
 
 def actualizarTabla(tbl):
     for i in tbl.get_children():
@@ -100,7 +102,7 @@ def menuCompras():
     except:
         menu = ttk.Window()
     menu.geometry("850x500")
-    menu.title("Sector compras")
+    menu.title("AMC STOCK")
 
     #label saludando al empleado
     ttk.Label(text="Bienvenido").place(x=20,y=20)
@@ -119,7 +121,8 @@ def menuCompras():
     actualizarTabla(tblInventario)
 
     #boton alta producto
-    btnAlta = ttk.Button(menu,text="Alta de productos",command=altaProducto)
+    btnAlta = ttk.Button(menu,text="AGREGAR AL STOCK",command=altaProducto)
     btnAlta.place(x=650,y=120)
 
     menu.mainloop()
+menuCompras()
