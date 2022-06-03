@@ -15,7 +15,7 @@ def maximo(lst,clave):
             if i[clave] > max:
                 max = i[clave]
     except:
-        max = 0
+        max = -1
     return max + 1
 
 

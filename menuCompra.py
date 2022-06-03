@@ -2,9 +2,8 @@ import json
 import ttkbootstrap as ttk
 import funciones as fn
 from tkinter import messagebox as ms
-import datetime
 
-#crea top level, el cual permite agregar, modificar, eliminar productos
+#crea top level, el cual permite agregar existencia de productos.
 def altaProducto():
     global alta
     try:
@@ -17,29 +16,39 @@ def altaProducto():
         #variables
         varNombreProducto = ttk.StringVar(alta,"")
         varFechaLanzamiento = ttk.StringVar(alta,"")
-        #funcion que permite agregar cantidad de productos a la lista compra y inventario, y si estan agregando alguno repetido, se lo suma a la lista de inventario
+
+        #funcion que permite agregar existencia de productos al inventario.
         def confirmarCompra():
             alta.focus()
             if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4  and cmbDesarrollador.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" :
                 #dar alta producto en inventario o sumarlo
                 lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-                nuevoProducto = {}
-                nuevoProducto["IDProducto"] = fn.maximo(lstInventario,"IDProducto")
-                nuevoProducto["Producto"] = (varNombreProducto.get()).upper()
-                nuevoProducto["Cantidad"] = 0
-                nuevoProducto["Precio"] = 0
-                nuevoProducto["Desarrollador"] = cmbDesarrollador.get()
-                nuevoProducto["Tipo"] = cmbTipo.get()
-                nuevoProducto["Categoria"] = cmbCategoria.get()
-                lstInventario.append(nuevoProducto)
-                with open("archivosJSON/inventario.json","w") as inventario:
-                    json.dump(lstInventario,inventario)
-                actualizarTabla(tblInventario)
-                ms.showinfo("Operacion realizada","el registro de compra se realizado con existo")
+                if any((i["Producto"] == (varNombreProducto.get()).upper() and i["Desarrollador"] == cmbDesarrollador.get() and i["Tipo"] == cmbTipo.get() ) for i in lstInventario):
+                    ms.showerror("Atencion","Ha ingresado un producto ya existente")
+                else:
+                    nuevoProducto = {}
+                    nuevoProducto["IDProducto"] = fn.maximo(lstInventario,"IDProducto")
+                    nuevoProducto["Producto"] = (varNombreProducto.get()).upper()
+                    nuevoProducto["Cantidad"] = 0
+                    nuevoProducto["Precio"] = 0
+                    nuevoProducto["Desarrollador"] = cmbDesarrollador.get()
+                    nuevoProducto["Tipo"] = cmbTipo.get()
+                    nuevoProducto["Categoria"] = cmbCategoria.get()
+                    lstInventario.append(nuevoProducto)
+                    with open("archivosJSON/inventario.json","w") as inventario:
+                        json.dump(lstInventario,inventario)
+                    actualizarTabla(tblInventario)
+                    ms.showinfo("Operacion realizada","El registro de alta de producto se ha completado con exito")
+                alta.focus()
                 varNombreProducto.set("")
                 varFechaLanzamiento.set("")
+                cmbCategoria.set("")
+                cmbDesarrollador.set("")
+                cmbTipo.set("")
             else:   
                 if ms.showerror("Error","La casillas no pueden estar vacias"):  alta.focus()
+
+
 
         #nombre producto
         ttk.Label(alta,text="Producto").place(x=20,y=20)
@@ -74,7 +83,7 @@ def actualizarTabla(tbl):
         tbl.delete(i)
     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
     for i in lstInventario:
-        tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["CantProducto"]))
+        tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
 #estructura del menu de compras
 def menuCompras():
@@ -82,7 +91,7 @@ def menuCompras():
         menu = ttk.Window()
     except:
         menu = ttk.Window()
-    menu.geometry("850x500")
+    menu.geometry("1060x400")
     menu.title("AMC STOCK")
 
     #label saludando al empleado
@@ -91,19 +100,25 @@ def menuCompras():
 
     #estructura de tabla(mostrar el inventario)
     global tblInventario
-    tblInventario = ttk.Treeview(columns=("col1","col2","col3","col4"))
-    tblInventario.column("#0", anchor=ttk.CENTER)
+    tblInventario = ttk.Treeview(columns=("col1","col2","col3","col4","col5"))
+    tblInventario.column("#0", anchor=ttk.CENTER,width=50)
     tblInventario.column("col1", anchor=ttk.CENTER)
     tblInventario.column("col2", anchor=ttk.CENTER)
-    tblInventario.heading("#0", anchor=ttk.CENTER, text="IDProducto")
+    tblInventario.column("col3", anchor=ttk.CENTER)
+    tblInventario.column("col4", anchor=ttk.CENTER,width=100)
+    tblInventario.column("col5", anchor=ttk.CENTER,width=100)
+    tblInventario.heading("#0", anchor=ttk.CENTER, text="ID")
     tblInventario.heading("col1", anchor=ttk.CENTER, text="Producto")
     tblInventario.heading("col2", anchor=ttk.CENTER, text="Desarrollador")
+    tblInventario.heading("col3", anchor=ttk.CENTER, text="Tipo")
+    tblInventario.heading("col4", anchor=ttk.CENTER, text="Precio")
+    tblInventario.heading("col5", anchor=ttk.CENTER, text="Cantidad")
     tblInventario.place(x=20,y=120)
     actualizarTabla(tblInventario)
 
     #boton alta producto
     btnAlta = ttk.Button(menu,text="AGREGAR AL STOCK",command=altaProducto)
-    btnAlta.place(x=645,y=120)
+    btnAlta.place(x=900,y=120)
 
     menu.mainloop()
 menuCompras()
