@@ -78,6 +78,65 @@ def altaProducto():
         ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=210,y=330)
 
 
+#crea top level, el cual permite modificar datos de productos existentes.
+def modificarProducto():
+    global modificar
+    try:
+        if modificar.state() == "normal":
+            modificar.focus()
+    except:
+        modificar = ttk.Toplevel(title="")
+        modificar.geometry("600x400")
+        
+        #variables
+        varNombreProducto = ttk.StringVar(modificar,"")
+        varFechaLanzamiento = ttk.StringVar(modificar,"")
+
+        #funcion que permite modificar productos existentes en el inventario.
+        def confirmarModificacion():
+            pass
+
+        #nombre producto
+        ttk.Label(modificar,text="Producto").place(x=20,y=20)
+        ttk.Entry(modificar,textvariable=varNombreProducto).place(x=210,y=20)
+
+        #nombre desarrollador
+        ttk.Label(modificar,text="Desarrollador").place(x=20,y=80)
+        cmbDesarrollador = ttk.Combobox(modificar,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
+        cmbDesarrollador.place(x=210,y=80)
+
+        #combobox tipo producto
+        ttk.Label(modificar,text="Tipo").place(x=20,y=140)
+        cmbTipo =ttk.Combobox(modificar,state="readonly",values=("Digital","Fisico"))
+        cmbTipo.place(x=210,y=140)
+
+        #combobox de categorias
+        ttk.Label(modificar,text="Categorias").place(x=20,y=200)
+        cmbCategoria = ttk.Combobox(modificar,state="readonly",values=("Terror","Deporte","Accion","FPS","RPG","Aventura"))
+        cmbCategoria.place(x=210,y=200)
+
+        #fecha lanzamiento producto
+        ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
+        ttk.Entry(modificar,textvariable=varFechaLanzamiento).place(x=210,y=260)
+
+
+        #buton confirmar compra
+        ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
+
+#permite eliminar producto seleccionado en el treeview
+def eliminarProducto():
+    if ms.askyesno("Atencion","¿Desea eliminar el producto seleccionado?"):
+        lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+        for i in lstInventario:
+            if i["IDProducto"] == tblInventario.item(tblInventario.focus(), 'text'):
+                lstInventario.remove(i)
+            with open("archivosJSON/inventario.json","w") as archivo:
+                json.dump(lstInventario,archivo)
+        actualizarTabla(tblInventario)
+
+
+
+#actualiza la tabla 
 def actualizarTabla(tbl):
     for i in tbl.get_children():
         tbl.delete(i)
@@ -86,11 +145,8 @@ def actualizarTabla(tbl):
         tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
 #estructura del menu de compras
-def menuCompras():
-    try:
-        menu = ttk.Window()
-    except:
-        menu = ttk.Window()
+def menuDeposito():
+    menu = ttk.Window()
     menu.geometry("1060x400")
     menu.title("AMC STOCK")
 
@@ -100,7 +156,7 @@ def menuCompras():
 
     #estructura de tabla(mostrar el inventario)
     global tblInventario
-    tblInventario = ttk.Treeview(columns=("col1","col2","col3","col4","col5"))
+    tblInventario = ttk.Treeview(columns=("col1","col2","col3","col4","col5"),selectmode="browse")
     tblInventario.column("#0", anchor=ttk.CENTER,width=50)
     tblInventario.column("col1", anchor=ttk.CENTER)
     tblInventario.column("col2", anchor=ttk.CENTER)
@@ -116,9 +172,25 @@ def menuCompras():
     tblInventario.place(x=20,y=120)
     actualizarTabla(tblInventario)
 
-    #boton alta producto
-    btnAlta = ttk.Button(menu,text="AGREGAR AL STOCK",command=altaProducto)
+    #Activar botones a traves de la seleccion del treeview
+    def activarBotones(event):
+        btnEliminar["state"]=ttk.NORMAL
+        btnModificar["state"]= ttk.NORMAL
+    tblInventario.bind("<<TreeviewSelect>>",activarBotones)
+    
+    
+
+    #button alta producto
+    btnAlta = ttk.Button(menu,text="Alta Producto",command=altaProducto,width=20)
     btnAlta.place(x=900,y=120)
 
+    #button modificar producto
+    btnModificar = ttk.Button(menu,text="Modificar Producto",command=modificarProducto,width=20,state="disable")
+    btnModificar.place(x=900,y=160)
+
+    #button modificar producto
+    btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarProducto,width=20,state="disable")
+    btnEliminar.place(x=900,y=200)
+
     menu.mainloop()
-menuCompras()
+menuDeposito()
