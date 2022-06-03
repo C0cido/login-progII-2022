@@ -13,12 +13,12 @@ def altaProducto():
         alta = ttk.Toplevel(title="")
         alta.geometry("600x400")
         
-        #variables
-        varNombreProducto = ttk.StringVar(alta,"")
-        varFechaLanzamiento = ttk.StringVar(alta,"")
+    #variables
+    varNombreProducto = ttk.StringVar(alta,"")
+    varFechaLanzamiento = ttk.StringVar(alta,"")
 
         #funcion que permite agregar existencia de productos al inventario.
-        def confirmarCompra():
+    def confirmarCompra():
             alta.focus()
             if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4  and cmbDesarrollador.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" :
                 #dar alta producto en inventario o sumarlo
@@ -29,11 +29,12 @@ def altaProducto():
                     nuevoProducto = {}
                     nuevoProducto["IDProducto"] = fn.maximo(lstInventario,"IDProducto")
                     nuevoProducto["Producto"] = (varNombreProducto.get()).upper()
-                    nuevoProducto["Cantidad"] = 0
-                    nuevoProducto["Precio"] = 0
                     nuevoProducto["Desarrollador"] = cmbDesarrollador.get()
+                    nuevoProducto["FechaLanzamiento"] = varFechaLanzamiento.get()
                     nuevoProducto["Tipo"] = cmbTipo.get()
                     nuevoProducto["Categoria"] = cmbCategoria.get()
+                    nuevoProducto["Cantidad"] = 0
+                    nuevoProducto["Precio"] = 0
                     lstInventario.append(nuevoProducto)
                     with open("archivosJSON/inventario.json","w") as inventario:
                         json.dump(lstInventario,inventario)
@@ -48,34 +49,31 @@ def altaProducto():
             else:   
                 if ms.showerror("Error","La casillas no pueden estar vacias"):  alta.focus()
 
-
-
         #nombre producto
-        ttk.Label(alta,text="Producto").place(x=20,y=20)
-        ttk.Entry(alta,textvariable=varNombreProducto).place(x=210,y=20)
+    ttk.Label(alta,text="Producto").place(x=20,y=20)
+    ttk.Entry(alta,textvariable=varNombreProducto).place(x=210,y=20)
 
         #nombre desarrollador
-        ttk.Label(alta,text="Desarrollador").place(x=20,y=80)
-        cmbDesarrollador = ttk.Combobox(alta,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
-        cmbDesarrollador.place(x=210,y=80)
+    ttk.Label(alta,text="Desarrollador").place(x=20,y=80)
+    cmbDesarrollador = ttk.Combobox(alta,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
+    cmbDesarrollador.place(x=210,y=80)
 
         #combobox tipo producto
-        ttk.Label(alta,text="Tipo").place(x=20,y=140)
-        cmbTipo =ttk.Combobox(alta,state="readonly",values=("Digital","Fisico"))
-        cmbTipo.place(x=210,y=140)
+    ttk.Label(alta,text="Tipo").place(x=20,y=140)
+    cmbTipo =ttk.Combobox(alta,state="readonly",values=("Digital","Fisico"))
+    cmbTipo.place(x=210,y=140)
 
         #combobox de categorias
-        ttk.Label(alta,text="Categorias").place(x=20,y=200)
-        cmbCategoria = ttk.Combobox(alta,state="readonly",values=("Terror","Deporte","Accion","FPS","RPG","Aventura"))
-        cmbCategoria.place(x=210,y=200)
+    ttk.Label(alta,text="Categorias").place(x=20,y=200)
+    cmbCategoria = ttk.Combobox(alta,state="readonly",values=("Terror","Deporte","Accion","FPS","RPG","Aventura"))
+    cmbCategoria.place(x=210,y=200)
 
         #fecha lanzamiento producto
-        ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=260)
-        ttk.Entry(alta,textvariable=varFechaLanzamiento).place(x=210,y=260)
-
+    ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=260)
+    ttk.Entry(alta,textvariable=varFechaLanzamiento).place(x=210,y=260)
 
         #buton confirmar compra
-        ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=210,y=330)
+    ttk.Button(alta,text="Confirmar",command=confirmarCompra).place(x=210,y=330)
 
 
 #crea top level, el cual permite modificar datos de productos existentes.
@@ -85,43 +83,51 @@ def modificarProducto():
         if modificar.state() == "normal":
             modificar.focus()
     except:
-        modificar = ttk.Toplevel(title="")
+        modificar = ttk.Toplevel(title="Modificar")
         modificar.geometry("600x400")
+
         
         #variables
-        varNombreProducto = ttk.StringVar(modificar,"")
-        varFechaLanzamiento = ttk.StringVar(modificar,"")
+    varNombreProducto = ttk.StringVar(modificar,"")
+    varFechaLanzamiento = ttk.StringVar(modificar,"")
 
         #funcion que permite modificar productos existentes en el inventario.
-        def confirmarModificacion():
+    def confirmarModificacion():
             pass
-
+                    
         #nombre producto
-        ttk.Label(modificar,text="Producto").place(x=20,y=20)
-        ttk.Entry(modificar,textvariable=varNombreProducto).place(x=210,y=20)
+    ttk.Label(modificar,text="Producto").place(x=20,y=20)
+    ttk.Entry(modificar,textvariable=varNombreProducto).place(x=210,y=20)
 
         #nombre desarrollador
-        ttk.Label(modificar,text="Desarrollador").place(x=20,y=80)
-        cmbDesarrollador = ttk.Combobox(modificar,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
-        cmbDesarrollador.place(x=210,y=80)
+    ttk.Label(modificar,text="Desarrollador").place(x=20,y=80)
+    cmbDesarrollador = ttk.Combobox(modificar,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
+    cmbDesarrollador.place(x=210,y=80)
 
         #combobox tipo producto
-        ttk.Label(modificar,text="Tipo").place(x=20,y=140)
-        cmbTipo =ttk.Combobox(modificar,state="readonly",values=("Digital","Fisico"))
-        cmbTipo.place(x=210,y=140)
+    ttk.Label(modificar,text="Tipo").place(x=20,y=140)
+    cmbTipo =ttk.Combobox(modificar,state="readonly",values=("Digital","Fisico"))
+    cmbTipo.place(x=210,y=140)
 
         #combobox de categorias
-        ttk.Label(modificar,text="Categorias").place(x=20,y=200)
-        cmbCategoria = ttk.Combobox(modificar,state="readonly",values=("Terror","Deporte","Accion","FPS","RPG","Aventura"))
-        cmbCategoria.place(x=210,y=200)
+    ttk.Label(modificar,text="Categorias").place(x=20,y=200)
+    cmbCategoria = ttk.Combobox(modificar,state="readonly",values=("Terror","Deporte","Accion","FPS","RPG","Aventura"))
+    cmbCategoria.place(x=210,y=200)
 
         #fecha lanzamiento producto
-        ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
-        ttk.Entry(modificar,textvariable=varFechaLanzamiento).place(x=210,y=260)
-
+    ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
+    ttk.Entry(modificar,textvariable=varFechaLanzamiento).place(x=210,y=260)
 
         #buton confirmar compra
-        ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
+    ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
+
+    
+    lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+    for i in lstInventario:
+        if i["IDProducto"] == tblInventario.item(tblInventario.focus(), 'text'):
+            varNombreProducto.set(i["Producto"])
+            varFechaLanzamiento.set(i["FechaLanzamiento"])
+        
 
 #permite eliminar producto seleccionado en el treeview
 def eliminarProducto():
@@ -133,8 +139,6 @@ def eliminarProducto():
             with open("archivosJSON/inventario.json","w") as archivo:
                 json.dump(lstInventario,archivo)
         actualizarTabla(tblInventario)
-
-
 
 #actualiza la tabla 
 def actualizarTabla(tbl):
