@@ -10,7 +10,7 @@ def altaProducto():
         if alta.state() == "normal":
             alta.focus()
     except:
-        alta = ttk.Toplevel(title="")
+        alta = ttk.Toplevel(title="Alta")
         alta.geometry("600x400")
         
     #variables
@@ -88,7 +88,7 @@ def modificarProducto():
 
         
         #variables
-    varNombreProducto = ttk.StringVar(modificar,"")
+    varProducto = ttk.StringVar(modificar,"hola")
     varFechaLanzamiento = ttk.StringVar(modificar,"")
 
         #funcion que permite modificar productos existentes en el inventario.
@@ -97,7 +97,7 @@ def modificarProducto():
                     
         #nombre producto
     ttk.Label(modificar,text="Producto").place(x=20,y=20)
-    ttk.Entry(modificar,textvariable=varNombreProducto).place(x=210,y=20)
+    ttk.Entry(modificar,textvariable=varProducto).place(x=210,y=20)
 
         #nombre desarrollador
     ttk.Label(modificar,text="Desarrollador").place(x=20,y=80)
@@ -120,13 +120,6 @@ def modificarProducto():
 
         #buton confirmar compra
     ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
-
-    
-    lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-    for i in lstInventario:
-        if i["IDProducto"] == tblInventario.item(tblInventario.focus(), 'text'):
-            varNombreProducto.set(i["Producto"])
-            varFechaLanzamiento.set(i["FechaLanzamiento"])
         
 
 #permite eliminar producto seleccionado en el treeview
@@ -181,8 +174,6 @@ def menuDeposito():
         btnEliminar["state"]=ttk.NORMAL
         btnModificar["state"]= ttk.NORMAL
     tblInventario.bind("<<TreeviewSelect>>",activarBotones)
-    
-    
 
     #button alta producto
     btnAlta = ttk.Button(menu,text="Alta Producto",command=altaProducto,width=20)
