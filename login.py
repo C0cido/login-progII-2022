@@ -3,7 +3,7 @@ import ttkbootstrap as ttk
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 import funciones as fn
-import abriMenues as menu
+
 
 pantalla = ttk.Window()
 pantalla.title("Login de usuarios")
@@ -42,18 +42,27 @@ def login():
                 break
         if encontrado:
             recordar()
-            pantalla.destroy()
-            menu.buscarEmpleado(idBuscar)            
+            lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
+            for i in lstEmpleado:
+                if i["IDUsuario"] == idBuscar:
+                    if i["Sector"] == "Deposito":
+                        pass 
+                    elif i["Sector"] == "Empleados":
+                        pass 
+                    elif i["Sector"] == "Compras":
+                        pass 
+                    elif i["Sector"] == "Ventas":
+                        pass
         else:
             ms.showinfo("Usuario no encontrado","El usuario o la contraseña no son correctas")
     else:
         ms.showerror("Error","Ingrese la informacion necesaria")
 
+
 #Nombre
 ttk.Label(pantalla,text="Nombre").place(x=20,y=20)
 entNombre = ttk.Entry(pantalla,textvariable=varNombre)
 entNombre.place(x=150,y=20)
-entNombre.focus()
 
 #contra
 ttk.Label(pantalla,text="Contra").place(x=20,y=80)

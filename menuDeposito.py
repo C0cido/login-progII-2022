@@ -177,18 +177,18 @@ def actualizarTabla(tbl):
         tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
 #estructura del menu de compras
-def menuDeposito():
+def Deposito():
     menu = ttk.Window()
     menu.geometry("1060x400")
     menu.title("AMC STOCK")
 
     #label saludando al empleado
-    ttk.Label(text="Bienvenido").place(x=20,y=20)
-    ttk.Label(text="Inventario actual").place(x=20,y=60)
+    ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
+    ttk.Label(menu,text="Inventario actual").place(x=20,y=60)
 
     #estructura de tabla(mostrar el inventario)
     global tblInventario
-    tblInventario = ttk.Treeview(columns=("col1","col2","col3","col4","col5"),selectmode="browse")
+    tblInventario = ttk.Treeview(menu,columns=("col1","col2","col3","col4","col5"),selectmode="browse")
     tblInventario.column("#0", anchor=ttk.CENTER,width=50)
     tblInventario.column("col1", anchor=ttk.CENTER)
     tblInventario.column("col2", anchor=ttk.CENTER)
@@ -220,5 +220,7 @@ def menuDeposito():
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarProducto,width=20)
     btnEliminar.place(x=900,y=200)
 
+    #destruirPantalla()
+
     menu.mainloop()
-menuDeposito()
+Deposito()
