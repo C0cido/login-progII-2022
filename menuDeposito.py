@@ -3,6 +3,8 @@ import ttkbootstrap as ttk
 import funciones as fn
 from tkinter import messagebox as ms
 
+
+
 #crea top level, el cual permite agregar existencia de productos.
 def altaProducto():
     global alta
@@ -86,10 +88,15 @@ def modificarProducto():
         modificar = ttk.Toplevel(title="Modificar")
         modificar.geometry("600x400")
 
-        
-        #variables
-    varProducto = ttk.StringVar(modificar,"hola")
-    varFechaLanzamiento = ttk.StringVar(modificar,"")
+    
+    #variables
+    global varProducto
+    global varFecha
+    global cmbCategoria
+    global cmbDesarrollador
+    global cmbTipo
+    varProducto = ttk.StringVar(modificar,"")
+    varFecha = ttk.StringVar(modificar,"")
 
         #funcion que permite modificar productos existentes en el inventario.
     def confirmarModificacion():
@@ -116,10 +123,16 @@ def modificarProducto():
 
         #fecha lanzamiento producto
     ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
-    ttk.Entry(modificar,textvariable=varFechaLanzamiento).place(x=210,y=260)
+    ttk.Entry(modificar,textvariable=varFecha).place(x=210,y=260)
 
         #buton confirmar compra
     ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
+
+    lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+    for i in lstInventario:
+        if i["IDProducto"] == tblInventario.item(tblInventario.focus(), 'text'):
+            varProducto.set(i["Producto"])
+            varFecha.set(i["FechaLanzamiento"])
         
 
 #permite eliminar producto seleccionado en el treeview
