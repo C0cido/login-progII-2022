@@ -150,11 +150,17 @@ def modificarEmpleado():
 #permite eliminar producto seleccionado en el treeview
 def eliminarEmpleado():
     if  tblEmpleados.item(tblEmpleados.focus(), 'text') != "":
-        if ms.askyesno("Atencion","¿Desea eliminar el producto seleccionado?"):
+        if ms.askyesno("Atencion","¿Desea eliminar el empleado seleccionado?"):
             lstEmpleados = fn.abrirArchivo("archivosJSON/empleados.json")
+            lstUsuario = fn.abrirArchivo("archivosJSON/usuarios.json")
             for i in lstEmpleados:
-                if i["IDEmpleados"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
+                if i["IDEmpleado"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                     lstEmpleados.remove(i)
+            for i in lstUsuario:
+                if i["IDUsuario"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
+                    lstUsuario.remove(i)
+            with open("archivosJSON/usuarios.json","w") as archivoUsuarios:
+                json.dump(lstUsuario,archivoUsuarios) 
             with open("archivosJSON/empleados.json","w") as archivo:
                 json.dump(lstEmpleados,archivo) 
             actualizarTabla(tblEmpleados)
