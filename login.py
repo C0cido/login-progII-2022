@@ -24,10 +24,10 @@ varRecordar = ttk.BooleanVar(pantalla,guardar)
 def recordar():
     if varRecordar.get():
         lstRecordar[0]["Usuario"]= varNombre.get()
-        lstRecordar[0]["Guardar"] = True
+        lstRecordar[0]["Recordar"] = True
     else:
         lstRecordar[0]["Usuario"]= ""
-        lstRecordar[0]["Guardar"] = False
+        lstRecordar[0]["Recordar"] = False
     with open("recordarme.json","w") as recordar:
         json.dump(lstRecordar,recordar)
 
@@ -36,7 +36,7 @@ def login():
     if len(varContra.get()) > 0 and len(varNombre.get()) > 0:
         encontrado = False 
         for i in lstUsuario:
-            if i["Usuario"] == varNombre.get() and check_password_hash(i["Contra"],varContra.get()):
+            if i["Usuario"] == (varNombre.get()).upper() and check_password_hash(i["Contra"],varContra.get()):
                 encontrado = True
                 idBuscar = i["IDUsuario"]
                 break
@@ -44,7 +44,7 @@ def login():
             recordar()
             lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
             for i in lstEmpleado:
-                if i["IDUsuario"] == idBuscar:
+                if i["IDEmpleado"] == idBuscar:
                     if i["Sector"] == "Deposito":
                         pass 
                     elif i["Sector"] == "Empleados":
