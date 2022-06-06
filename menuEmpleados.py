@@ -173,7 +173,7 @@ def actualizarTabla(tbl):
 
 #estructura del menu de compras
 def Empleados():
-    menu = ttk.Window(themename="pulse")
+    menu = ttk.Window(themename="cyborg")
     menu.geometry("1200x500")
     menu.title("AMC EMPLEADOS")
 
