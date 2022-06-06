@@ -14,6 +14,7 @@ def altaEmpleado():
     except:
         alta = ttk.Toplevel(title="Alta")
         alta.geometry("600x400")
+        alta(theme="darkly")
         
         #variables
         varNombre = ttk.StringVar(alta,"")
@@ -49,7 +50,7 @@ def altaEmpleado():
                         with open("archivosJSON/usuarios.json","w") as archivo:
                             json.dump(lstUsuarios,archivo)
                         actualizarTabla(tblEmpleados)
-                        ms.showinfo("Operacion realizada","El registro de alta de producto se ha completado con exito")
+                        ms.showinfo("Operacion realizada","El registro de alta de empleados se ha completado con exito")
                     alta.focus()
                     varNombre.set("")
                     varDNI.set("")
@@ -150,10 +151,10 @@ def modificarEmpleado():
 #permite eliminar producto seleccionado en el treeview
 def eliminarEmpleado():
     if  tblEmpleados.item(tblEmpleados.focus(), 'text') != "":
-        if ms.askyesno("Atencion","¿Desea eliminar el producto seleccionado?"):
+        if ms.askyesno("Atencion","¿Desea eliminar el empleado seleccionado?"):
             lstEmpleados = fn.abrirArchivo("archivosJSON/empleados.json")
             for i in lstEmpleados:
-                if i["IDEmpleados"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
+                if i["IDEmpleado"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                     lstEmpleados.remove(i)
             with open("archivosJSON/empleados.json","w") as archivo:
                 json.dump(lstEmpleados,archivo) 
