@@ -14,7 +14,8 @@ def altaEmpleado():
     except:
         alta = ttk.Toplevel(title="Alta")
         alta.geometry("600x400")
-        alta(theme="darkly")
+        
+    
         
         #variables
         varNombre = ttk.StringVar(alta,"")
@@ -172,7 +173,7 @@ def actualizarTabla(tbl):
 
 #estructura del menu de compras
 def Empleados():
-    menu = ttk.Window()
+    menu = ttk.Window(themename="pulse")
     menu.geometry("1200x500")
     menu.title("AMC EMPLEADOS")
 
