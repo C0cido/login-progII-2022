@@ -1,55 +1,64 @@
-from faulthandler import disable
 import json
 import ttkbootstrap as ttk
 import funciones as fn
 from tkinter import messagebox as ms
+import datetime as time
 
+
+global lstCarrito
 lstCarrito = []
 
-def datosCarrito(produc):
-    global datos
-    try:
-        if datos.state() == "normal":
-            datos.focus()
-    except:
-        datos = ttk.Toplevel(title="Formulario")
-        datos.geometry("600x400")
-        
-
-        #variables
-        varNombre = ttk.StringVar(datos,"")
-        varCantidad = ttk.StringVar(datos,"0")
-        varPrecio = ttk.StringVar(datos,"0")
-        varNombre.set(produc)
-
-
-        def confirmarDatos():
-            if ((varCantidad.get()).isdigit() and (varPrecio.get()).isdigit() and int(varPrecio.get()) > 0 and int(varCantidad.get()) > 0):
-                pass
-            else:
-                if ms.showerror("Error","La casillas no pueden estar vacias o los datos deben ser mayor a 0"):  datos.focus()
-            
-            #nombre producto
-        ttk.Label(datos,text="Producto").place(x=20,y=20)
-        ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20)
-
-            #nombre desarrollador
-        ttk.Label(datos,text="Cantidad").place(x=20,y=80)
-        ttk.Entry(datos,textvariable=varCantidad).place(x=210,y=80)
-
-            #combobox tipo producto
-        ttk.Label(datos,text="Precio").place(x=20,y=140)
-        ttk.Entry(datos,textvariable=varPrecio).place(x=210,y=140)
-
-
-            #buton confirmar compra
-        ttk.Button(datos,text="Confirmar",command=confirmarDatos).place(x=210,y=200)
+    
 
 def agregarCarrito():
     if  tblInventario.item(tblInventario.focus(), 'text') != "":
         if ms.askyesno("Atencion","¿Desea agregar el producto seleccionado?"):
-            nombre = tblInventario.item(tblInventario.focus(),"values"[0])
-            datosCarrito("jorge")
+            global datos
+            try:
+                if datos.state() == "normal":
+                    datos.focus()
+            except:
+                datos = ttk.Toplevel(title="Formulario")
+                datos.geometry("600x400")
+                
+
+                #variables
+                global varNombre
+                varNombre = ttk.StringVar(datos,"")
+                varCantidad = ttk.StringVar(datos,"0")
+                varPrecio = ttk.StringVar(datos,"0")
+
+                lstInventario =fn.abrirArchivo("archivosJSON/inventario.json")
+                for i in lstInventario:
+                    if i["IDProducto"]== tblInventario.item(tblInventario.focus(),"text"):
+                        varNombre.set(i["Producto"])
+                
+                def confirmarDatos():
+                    if ((varCantidad.get()).isdigit() and (varPrecio.get()).isdigit() and int(varPrecio.get()) > 0 and int(varCantidad.get()) > 0):
+                        nuevoProducto = {}
+                        nuevoProducto["IDProducto"] = tblInventario.item(tblInventario.focus(),"text")
+                        nuevoProducto["Producto"] = varNombre.get()
+                        nuevoProducto["Cantidad"] = int(varCantidad.get())
+                        nuevoProducto["Precio"] = float(varPrecio.get())
+                        lstCarrito.append(nuevoProducto)
+                        actualizarTablaCarrito()
+                        datos.destroy()
+                    else:
+                        if ms.showerror("Error","La casillas no pueden estar vacias o los datos deben ser mayor a 0"):  datos.focus()
+                    
+                    
+                ttk.Label(datos,text="Nombre").place(x=20,y=20)
+                ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20)  
+                    #cantidad
+                ttk.Label(datos,text="Cantidad").place(x=20,y=80)
+                ttk.Entry(datos,textvariable=varCantidad).place(x=210,y=80)
+
+                    #precio
+                ttk.Label(datos,text="Precio").place(x=20,y=140)
+                ttk.Entry(datos,textvariable=varPrecio).place(x=210,y=140)
+
+                    #buton confirmar compra
+                ttk.Button(datos,text="Confirmar",command=confirmarDatos).place(x=210,y=200)
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 
@@ -62,6 +71,7 @@ def eliminarCarrito():
             actualizarTablaCarrito()
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
+
 
 
 def actualizarTablaCarrito():
@@ -77,6 +87,20 @@ def actualizarTablaInventario():
     for i in lstInventario:
         tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
+def confirmarComprar():
+    lstCarrito
+    lstCompra = fn.abrirArchivo("archivosJSON/compras.json")
+    nuevaCompra = {}
+    nuevaCompra["IDCompra"] = fn.maximo(lstCompra,"IDCompra")
+    nuevaCompra["Compra"] = lstCarrito
+    nuevaCompra["Fecha"] = time.date.today()
+    lstCompra.append(nuevaCompra)
+    with open("archivosJSON/compras.json","w") as archivo:
+        json.dump(lstCompra,archivo)
+    lstCarrito=[]
+    actualizarTablaCarrito()
+    actualizarTablaInventario()
+    ms.showinfo("Operación realizada","La compra de los productos se ha realizado con exito")
 
 def Deposito():
     menu = ttk.Window()
@@ -114,10 +138,10 @@ def Deposito():
     tblCarrito.heading("col1", anchor=ttk.CENTER, text="Producto")
     tblCarrito.heading("col2", anchor=ttk.CENTER, text="Precio")
     tblCarrito.heading("col3", anchor=ttk.CENTER, text="Cantidad")
-    tblCarrito.place(x=650,y=200)
+    tblCarrito.place(x=650,y=180)
 
     #Activar botones a traves de la seleccion del treeview
-
+    
     #button alta producto
     btnAlta = ttk.Button(menu,text="Agregar Producto",command=agregarCarrito,width=20)
     btnAlta.place(x=700,y=120)
@@ -127,7 +151,9 @@ def Deposito():
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarCarrito,width=20)
     btnEliminar.place(x=900,y=120)
 
-    #destruirPantalla()
+    #button confirmar comprar
+    btnConfirmar =ttk.Button(menu,text="Confirmar",command=confirmarComprar,width=20)
+    btnConfirmar.place(x=810,y=400)
 
     menu.mainloop()
 Deposito()
