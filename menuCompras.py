@@ -1,25 +1,60 @@
+from faulthandler import disable
 import json
 import ttkbootstrap as ttk
 import funciones as fn
 from tkinter import messagebox as ms
 
 lstCarrito = []
+
+def datosCarrito(produc):
+    global datos
+    try:
+        if datos.state() == "normal":
+            datos.focus()
+    except:
+        datos = ttk.Toplevel(title="Formulario")
+        datos.geometry("600x400")
+        
+
+        #variables
+        varNombre = ttk.StringVar(datos,"")
+        varCantidad = ttk.StringVar(datos,"0")
+        varPrecio = ttk.StringVar(datos,"0")
+        varNombre.set(produc)
+
+
+        def confirmarDatos():
+            if ((varCantidad.get()).isdigit() and (varPrecio.get()).isdigit() and int(varPrecio.get()) > 0 and int(varCantidad.get()) > 0):
+                pass
+            else:
+                if ms.showerror("Error","La casillas no pueden estar vacias o los datos deben ser mayor a 0"):  datos.focus()
+            
+            #nombre producto
+        ttk.Label(datos,text="Producto").place(x=20,y=20)
+        ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20)
+
+            #nombre desarrollador
+        ttk.Label(datos,text="Cantidad").place(x=20,y=80)
+        ttk.Entry(datos,textvariable=varCantidad).place(x=210,y=80)
+
+            #combobox tipo producto
+        ttk.Label(datos,text="Precio").place(x=20,y=140)
+        ttk.Entry(datos,textvariable=varPrecio).place(x=210,y=140)
+
+
+            #buton confirmar compra
+        ttk.Button(datos,text="Confirmar",command=confirmarDatos).place(x=210,y=200)
+
 def agregarCarrito():
     if  tblInventario.item(tblInventario.focus(), 'text') != "":
         if ms.askyesno("Atencion","¿Desea agregar el producto seleccionado?"):
-            producto={}
-            producto["IDProducto"] = 1
-            producto["Producto"] = "hola"
-            producto["Precio"] = 10
-            producto["Cantidad"] = 1
-            lstCarrito.append(producto)
-            actualizarTablaCarrito()
+            nombre = tblInventario.item(tblInventario.focus(),"values"[0])
+            datosCarrito("jorge")
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 
 def eliminarCarrito():
     if  tblCarrito.item(tblCarrito.focus(), 'text') != "":
-
         if ms.askyesno("Atencion","¿Desea eliminar el producto seleccionado?"):
             for i in lstCarrito:
                 if i["IDProducto"] == tblCarrito.item(tblCarrito.focus(), 'text'):
