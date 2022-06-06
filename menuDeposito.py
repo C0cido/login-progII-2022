@@ -211,12 +211,10 @@ def Deposito():
     btnAlta.place(x=900,y=120)
 
     #button modificar producto
-    global btnModificar
     btnModificar = ttk.Button(menu,text="Modificar Producto",command=modificarProducto,width=20)
     btnModificar.place(x=900,y=160)
 
     #button modificar producto
-    global btnEliminar
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarProducto,width=20)
     btnEliminar.place(x=900,y=200)
 
