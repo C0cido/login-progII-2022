@@ -32,9 +32,11 @@ def agregarCarrito():
                 for i in lstInventario:
                     if i["IDProducto"]== tblInventario.item(tblInventario.focus(),"text"):
                         varNombre.set(i["Producto"])
+                        varPrecio.set(i["Precio"])
+                        stockActual = i["Cantidad"]
                 
                 def confirmarDatos():
-                    if ((varCantidad.get()).isdigit() and (varPrecio.get()).isdigit() and int(varPrecio.get()) > 0 and int(varCantidad.get()) > 0):
+                    if ((varCantidad.get()).isdigit()  and int(varCantidad.get()) > 0 and stockActual >= int(varCantidad.get())):
                         nuevoProducto = {}
                         nuevoProducto["IDProducto"] = tblInventario.item(tblInventario.focus(),"text")
                         nuevoProducto["Producto"] = varNombre.get()
@@ -44,22 +46,23 @@ def agregarCarrito():
                         actualizarTablaCarrito()
                         datos.destroy()
                     else:
+                        #especiicar los errores
                         if ms.showerror("Error","La casillas no pueden estar vacias o los datos deben ser mayor a 0"):  datos.focus()
                     
                     #nombre
                 ttk.Label(datos,text="Nombre").place(x=20,y=20)
-                ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20)  
-                    #cantidad
-                ttk.Label(datos,text="Cantidad").place(x=20,y=80)
-                entCant=ttk.Entry(datos,textvariable=varCantidad)
-                entCant.place(x=210,y=80)
-                entCant.focus()
-
+                ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20) 
 
                     #precio
-                ttk.Label(datos,text="Precio").place(x=20,y=140)
-                ttk.Entry(datos,textvariable=varPrecio).place(x=210,y=140)
+                ttk.Label(datos,text="Precio").place(x=20,y=80)
+                ttk.Entry(datos,textvariable=varPrecio,state="disable").place(x=210,y=80)
 
+                    #cantidad
+                ttk.Label(datos,text="Cantidad").place(x=20,y=140)
+                entCant=ttk.Entry(datos,textvariable=varCantidad)
+                entCant.place(x=210,y=140)
+                entCant.focus()
+                                
                     #buton confirmar compra
                 ttk.Button(datos,text="Confirmar",command=confirmarDatos).place(x=210,y=200)
     else:
@@ -88,39 +91,42 @@ def actualizarTablaInventario():
         tblInventario.delete(i)
     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
     for i in lstInventario:
-        tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Precio"],i["Cantidad"]))
+        if i["Cantidad"] > 0:
+            tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Precio"],i["Cantidad"]))
 
 
 #fn que permite confirmar la compra y actualiza los datos en los respectivos archivos
 def confirmarComprar():
     if len(tblCarrito.get_children()) > 0:
         lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-        lstCompra = fn.abrirArchivo("archivosJSON/compras.json")
+        lstVenta = fn.abrirArchivo("archivosJSON/ventas.json")
         lstCarrito = []
-        nuevaCompra = {}
+        nuevaVenta = {}
         #Cambiar ganancia y proveedor hacer con un entry...
-        ganancia = 1.5
-        proveedor = "Cualquiera"
+        cliente = "Cualquiera"
+        total = 0
         for i in tblCarrito.get_children():
             producto = {}
             producto["IDProducto"] = tblCarrito.item(i)["text"]
             producto["Producto"] = tblCarrito.item(i)["values"][0]
             producto["Precio"] = float(tblCarrito.item(i)["values"][1])
             producto["Cantidad"] = int(tblCarrito.item(i)["values"][2])
+            total += (float(tblCarrito.item(i)["values"][1]) * int(tblCarrito.item(i)["values"][2]))
             for j in lstInventario:
                 if int(tblCarrito.item(i)["text"])== j["IDProducto"]:
-                    j["Cantidad"] += tblCarrito.item(i)["values"][2]
-                    j["Precio"] = (float(tblCarrito.item(i)["values"][1])/int(tblCarrito.item(i)["values"][2]))*ganancia
+                    j["Cantidad"] -= tblCarrito.item(i)["values"][2]
+                    j["Precio"] = float(tblCarrito.item(i)["values"][1])
                     with open("archivosJSON/inventario.json","w") as archivo:
                         json.dump(lstInventario,archivo)
             lstCarrito.append(producto)
-        nuevaCompra["IDCompra"] = fn.maximo(lstCompra,"IDCompra")
-        nuevaCompra["Proveedor"] = proveedor
-        nuevaCompra["CompraRealizada"] = lstCarrito
-        nuevaCompra["FechaCompra"] = 2022
-        lstCompra.append(nuevaCompra)
-        with open("archivosJSON/compras.json","w") as compra:
-            json.dump(lstCompra,compra)
+        nuevaVenta["IDVenta"] = fn.maximo(lstVenta,"IDVenta")
+        nuevaVenta["Cliente"] = cliente
+        nuevaVenta["TotalACobrar"] = total
+        nuevaVenta["VentaRealizada"] = lstCarrito
+        nuevaVenta["FechaCompra"] = 2022
+        lstVenta.append(nuevaVenta)
+        with open("archivosJSON/ventas.json","w") as venta:
+            json.dump(lstVenta,venta)
         lstCarrito.clear()
         for i in tblCarrito.get_children():
             tblCarrito.delete(i)
@@ -128,10 +134,10 @@ def confirmarComprar():
     else:
         ms.showerror("Error","No hay producto en el carrito")
 #fn que crea la ventana principal
-def Compras():
+def Ventas():
     menu = ttk.Window()
     menu.geometry("1200x500")
-    menu.title("AMC Compras")
+    menu.title("AMC Ventas")
 
     #label saludando al empleado
     ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
@@ -178,4 +184,4 @@ def Compras():
     btnConfirmar.place(x=780,y=425)
 
     menu.mainloop()
-Compras()
+Ventas()
