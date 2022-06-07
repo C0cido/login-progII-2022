@@ -46,12 +46,15 @@ def agregarCarrito():
                     else:
                         if ms.showerror("Error","La casillas no pueden estar vacias o los datos deben ser mayor a 0"):  datos.focus()
                     
-                    
+                    #nombre
                 ttk.Label(datos,text="Nombre").place(x=20,y=20)
                 ttk.Entry(datos,textvariable=varNombre,state="disable").place(x=210,y=20)  
                     #cantidad
                 ttk.Label(datos,text="Cantidad").place(x=20,y=80)
-                ttk.Entry(datos,textvariable=varCantidad).place(x=210,y=80)
+                entCant=ttk.Entry(datos,textvariable=varCantidad)
+                entCant.place(x=210,y=80)
+                entCant.focus()
+
 
                     #precio
                 ttk.Label(datos,text="Precio").place(x=20,y=140)
@@ -85,25 +88,45 @@ def actualizarTablaInventario():
         tblInventario.delete(i)
     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
     for i in lstInventario:
-        tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
+        tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Precio"],i["Cantidad"]))
+
 
 #fn que permite confirmar la compra y actualiza los datos en los respectivos archivos
 def confirmarComprar():
-    lstCarrito = []
-    lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-    ganancia = 1.5
-    for i in tblCarrito.get_children():
-        producto = {}
-        producto["IDProducto"] = tblCarrito.item(i)["text"]
-        producto["Producto"] = tblCarrito.item(i)["values"][0]
-        producto["Precio"] = tblCarrito.item(i)["values"][1]
-        producto["Cantidad"] = tblCarrito.item(i)["values"][2]
-        lstCarrito.append(producto)
-        if any(tblCarrito.item(i)["text"]== j["IDProducto"] for j in lstInventario):
-            j["Cantidad"] += tblCarrito.item(i)["values"][2]
-            j["Precio"] 
-    print(lstCarrito)
-
+    if len(tblCarrito.get_children()) > 0:
+        lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+        lstCompra = fn.abrirArchivo("archivosJSON/compras.json")
+        lstCarrito = []
+        nuevaCompra = {}
+        #Cambiar ganancia y proveedor hacer con un entry...
+        ganancia = 1.5
+        proveedor = "Cualquiera"
+        for i in tblCarrito.get_children():
+            producto = {}
+            producto["IDProducto"] = tblCarrito.item(i)["text"]
+            producto["Producto"] = tblCarrito.item(i)["values"][0]
+            producto["Precio"] = float(tblCarrito.item(i)["values"][1])
+            producto["Cantidad"] = int(tblCarrito.item(i)["values"][2])
+            for j in lstInventario:
+                if int(tblCarrito.item(i)["text"])== j["IDProducto"]:
+                    j["Cantidad"] += tblCarrito.item(i)["values"][2]
+                    j["Precio"] = (float(tblCarrito.item(i)["values"][1])/int(tblCarrito.item(i)["values"][2]))*ganancia
+                    with open("archivosJSON/inventario.json","w") as archivo:
+                        json.dump(lstInventario,archivo)
+            lstCarrito.append(producto)
+        nuevaCompra["IDCompra"] = fn.maximo(lstCompra,"IDCompra")
+        nuevaCompra["Proveedor"] = proveedor
+        nuevaCompra["CompraRealizada"] = lstCarrito
+        nuevaCompra["FechaCompra"] = 2022
+        lstCompra.append(nuevaCompra)
+        with open("archivosJSON/compras.json","w") as compra:
+            json.dump(lstCompra,compra)
+        lstCarrito.clear()
+        for i in tblCarrito.get_children():
+            tblCarrito.delete(i)
+        actualizarTablaInventario()
+    else:
+        ms.showerror("Error","No hay producto en el carrito")
 #fn que crea la ventana principal
 def Deposito():
     menu = ttk.Window()
@@ -125,7 +148,7 @@ def Deposito():
     tblInventario.heading("#0", anchor=ttk.CENTER, text="ID")
     tblInventario.heading("col1", anchor=ttk.CENTER, text="Producto")
     tblInventario.heading("col2", anchor=ttk.CENTER, text="Desarrollador")
-    tblInventario.heading("col3", anchor=ttk.CENTER, text="Tipo")
+    tblInventario.heading("col3", anchor=ttk.CENTER, text="Precio")
     tblInventario.heading("col4", anchor=ttk.CENTER, text="Cantidad")
     tblInventario.place(x=20,y=120)
     actualizarTablaInventario()
