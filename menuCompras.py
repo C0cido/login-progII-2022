@@ -9,7 +9,7 @@ global lstCarrito
 lstCarrito = []
 
     
-
+#fn crea top level que permite agregar la informacion ha agregar en el carrito 
 def agregarCarrito():
     if  tblInventario.item(tblInventario.focus(), 'text') != "":
         if ms.askyesno("Atencion","¿Desea agregar el producto seleccionado?"):
@@ -62,6 +62,7 @@ def agregarCarrito():
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 
+#fn permite eliminar producto en el carrito
 def eliminarCarrito():
     if  tblCarrito.item(tblCarrito.focus(), 'text') != "":
         if ms.askyesno("Atencion","¿Desea eliminar el producto seleccionado?"):
@@ -72,8 +73,7 @@ def eliminarCarrito():
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 
-
-
+#actualiza tabla
 def actualizarTablaCarrito():
     for i in tblCarrito.get_children():
         tblCarrito.delete(i)
@@ -87,21 +87,13 @@ def actualizarTablaInventario():
     for i in lstInventario:
         tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
+#fn que permite confirmar la compra y actualiza los datos en los respectivos archivos
 def confirmarComprar():
-    lstCarrito
-    lstCompra = fn.abrirArchivo("archivosJSON/compras.json")
-    nuevaCompra = {}
-    nuevaCompra["IDCompra"] = fn.maximo(lstCompra,"IDCompra")
-    nuevaCompra["Compra"] = lstCarrito
-    nuevaCompra["Fecha"] = time.date.today()
-    lstCompra.append(nuevaCompra)
-    with open("archivosJSON/compras.json","w") as archivo:
-        json.dump(lstCompra,archivo)
-    lstCarrito=[]
-    actualizarTablaCarrito()
-    actualizarTablaInventario()
-    ms.showinfo("Operación realizada","La compra de los productos se ha realizado con exito")
+    for i in tblCarrito.get_children():
+        id = tblCarrito.item(i)["text"]
+        print (id)
 
+#fn que crea la ventana principal
 def Deposito():
     menu = ttk.Window()
     menu.geometry("1200x500")
@@ -127,7 +119,6 @@ def Deposito():
     tblInventario.place(x=20,y=120)
     actualizarTablaInventario()
 
-
     global tblCarrito
     tblCarrito = ttk.Treeview(menu,columns=("col1","col2","col3"),selectmode="browse")
     tblCarrito.column("#0", anchor=ttk.CENTER,width=50)
@@ -138,22 +129,19 @@ def Deposito():
     tblCarrito.heading("col1", anchor=ttk.CENTER, text="Producto")
     tblCarrito.heading("col2", anchor=ttk.CENTER, text="Precio")
     tblCarrito.heading("col3", anchor=ttk.CENTER, text="Cantidad")
-    tblCarrito.place(x=650,y=180)
+    tblCarrito.place(x=650,y=120)
 
-    #Activar botones a traves de la seleccion del treeview
-    
     #button alta producto
     btnAlta = ttk.Button(menu,text="Agregar Producto",command=agregarCarrito,width=20)
-    btnAlta.place(x=700,y=120)
+    btnAlta.place(x=650,y=80)
 
     #button modificar producto
-
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarCarrito,width=20)
-    btnEliminar.place(x=900,y=120)
+    btnEliminar.place(x=880,y=80)
 
     #button confirmar comprar
     btnConfirmar =ttk.Button(menu,text="Confirmar",command=confirmarComprar,width=20)
-    btnConfirmar.place(x=810,y=400)
+    btnConfirmar.place(x=780,y=425)
 
     menu.mainloop()
 Deposito()
