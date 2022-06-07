@@ -3,6 +3,7 @@ import ttkbootstrap as ttk
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 import funciones as fn
+import menuDeposito as depo
 
 
 pantalla = ttk.Window()
@@ -46,7 +47,7 @@ def login():
             for i in lstEmpleado:
                 if i["IDEmpleado"] == idBuscar:
                     if i["Sector"] == "Deposito":
-                        pass 
+                         depo.Deposito()
                     elif i["Sector"] == "Empleados":
                         pass 
                     elif i["Sector"] == "Compras":
