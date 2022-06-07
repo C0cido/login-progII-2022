@@ -89,9 +89,15 @@ def actualizarTablaInventario():
 
 #fn que permite confirmar la compra y actualiza los datos en los respectivos archivos
 def confirmarComprar():
+    lstCarrito = []
     for i in tblCarrito.get_children():
-        id = tblCarrito.item(i)["text"]
-        print (id)
+        producto = {}
+        producto["IDProducto"] = tblCarrito.item(i)["text"]
+        producto["Producto"] = tblCarrito.item(i)["values"][0]
+        producto["Precio"] = tblCarrito.item(i)["values"][1]
+        producto["Cantidad"] = tblCarrito.item(i)["values"][2]
+        lstCarrito.append(producto)
+    print(lstCarrito)
 
 #fn que crea la ventana principal
 def Deposito():
