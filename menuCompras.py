@@ -91,6 +91,7 @@ def actualizarTablaInventario():
 def confirmarComprar():
     lstCarrito = []
     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+    ganancia = 1.5
     for i in tblCarrito.get_children():
         producto = {}
         producto["IDProducto"] = tblCarrito.item(i)["text"]
@@ -99,7 +100,8 @@ def confirmarComprar():
         producto["Cantidad"] = tblCarrito.item(i)["values"][2]
         lstCarrito.append(producto)
         if any(tblCarrito.item(i)["text"]== j["IDProducto"] for j in lstInventario):
-            pass
+            j["Cantidad"] += tblCarrito.item(i)["values"][2]
+            j["Precio"] 
     print(lstCarrito)
 
 #fn que crea la ventana principal
