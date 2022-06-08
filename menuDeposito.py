@@ -63,7 +63,7 @@ def altaProducto():
 
             #nombre desarrollador
         ttk.Label(alta,text="Desarrollador").place(x=20,y=80)
-        cmbDesarrollador = ttk.Combobox(alta,state="readonly",values=("SONY","MICROSOFT","FROM_SOFTWARE","2K_INTERACTIVE","UBISOFT","VALVE","CAPCOM","RIOT GAMES","ELECTRONIC_ARTS"))
+        cmbDesarrollador = ttk.Combobox(alta,state="readonly",values=(fn.abrirArchivo("archivosJSON/desarrollador.json")))
         cmbDesarrollador.place(x=210,y=80)
 
             #combobox tipo producto
