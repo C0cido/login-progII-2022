@@ -268,4 +268,4 @@ def Deposito():
     btnEliminar.place(x=900,y=200)
 
     menu.mainloop()
-Deposito()
+

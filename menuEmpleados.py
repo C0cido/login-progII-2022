@@ -274,4 +274,3 @@ def Empleados():
 
 
     menu.mainloop()
-Empleados()

@@ -3,7 +3,10 @@ import ttkbootstrap as ttk
 from werkzeug.security import check_password_hash
 from tkinter import messagebox as ms
 import funciones as fn
-import menuDeposito as depo
+from menuCompras import Compras
+from menuDeposito import Deposito
+from menuEmpleados import Empleados
+from menuVentas import Ventas
 
 
 pantalla = ttk.Window()
@@ -43,17 +46,18 @@ def login():
                 break
         if encontrado:
             recordar()
+            pantalla.minsize()
             lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
             for i in lstEmpleado:
                 if i["IDEmpleado"] == idBuscar:
                     if i["Sector"] == "Deposito":
-                         depo.Deposito()
+                        Deposito()
                     elif i["Sector"] == "Empleados":
-                        pass 
+                        Empleados()
                     elif i["Sector"] == "Compras":
-                        pass 
+                        Compras()
                     elif i["Sector"] == "Ventas":
-                        pass
+                        Ventas()
         else:
             ms.showinfo("Usuario no encontrado","El usuario o la contraseña no son correctas")
     else:

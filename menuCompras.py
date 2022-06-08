@@ -238,4 +238,3 @@ def Compras():
     btnConfirmar.place(x=780,y=460)
 
     menu.mainloop()
-Compras()
