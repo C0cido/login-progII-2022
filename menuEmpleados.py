@@ -130,6 +130,7 @@ def modificarEmpleado():
                                 i["DNI"] = varDNI.get()
                                 i["CUIT"] = varCUIT.get()
                                 i["Sector"] = cmbSector.get()
+                                break
                         with open("archivosJSON/empleados.json","w") as archivo:
                             json.dump(lstEmpleado,archivo)
                         actualizarTabla(tblEmpleados)  
@@ -173,6 +174,7 @@ def modificarEmpleado():
                     varDNI.set(i["DNI"])
                     varCUIT.set(i["CUIT"])
                     cmbSector.set(i["Sector"])
+                    break
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 #permite eliminar producto seleccionado en el treeview
@@ -184,9 +186,11 @@ def eliminarEmpleado():
             for i in lstEmpleados:
                 if i["IDEmpleado"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                     lstEmpleados.remove(i)
+                    break
             for i in lstUsuario:
                 if i["IDUsuario"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                     lstUsuario.remove(i)
+                    break
             with open("archivosJSON/usuarios.json","w") as archivoUsuarios:
                 json.dump(lstUsuario,archivoUsuarios) 
             with open("archivosJSON/empleados.json","w") as archivo:

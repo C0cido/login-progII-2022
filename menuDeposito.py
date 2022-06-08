@@ -22,21 +22,22 @@ def altaProducto():
             #funcion que permite agregar existencia de productos al inventario.
         def confirmarAlta():
                 alta.focus()
-                if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4  and cmbDesarrollador.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" :
+                if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4  and cmbDesarrollador.get() != ""and cmbGanancias.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" and (varFechaLanzamiento.get()).isdigit():
                     #dar alta producto en inventario o sumarlo
                     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-                    if any((i["Producto"] == (varNombreProducto.get()).upper() and i["Desarrollador"] == cmbDesarrollador.get() and i["Tipo"] == cmbTipo.get() ) for i in lstInventario):
+                    if any((i["Producto"] == (varNombreProducto.get()).upper() and i["Desarrollador"] == cmbDesarrollador.get() and i["Tipo"] == cmbTipo.get()) for i in lstInventario):
                         ms.showerror("Atencion","Ha ingresado un producto ya existente")
                     else:
                         nuevoProducto = {}
                         nuevoProducto["IDProducto"] = fn.maximo(lstInventario,"IDProducto")
                         nuevoProducto["Producto"] = (varNombreProducto.get()).upper()
                         nuevoProducto["Desarrollador"] = cmbDesarrollador.get()
-                        nuevoProducto["FechaLanzamiento"] = varFechaLanzamiento.get()
+                        nuevoProducto["FechaLanzamiento"] = int(varFechaLanzamiento.get())
                         nuevoProducto["Tipo"] = cmbTipo.get()
                         nuevoProducto["Categoria"] = cmbCategoria.get()
                         nuevoProducto["Cantidad"] = 0
                         nuevoProducto["Precio"] = 0
+                        nuevoProducto["Ganancias"] = int(cmbGanancias.get())
                         lstInventario.append(nuevoProducto)
                         with open("archivosJSON/inventario.json","w") as inventario:
                             json.dump(lstInventario,inventario)
@@ -49,7 +50,11 @@ def altaProducto():
                     cmbDesarrollador.set("")
                     cmbTipo.set("")
                 else:   
-                    if ms.showerror("Error","La casillas no pueden estar vacias"):  alta.focus()
+                    if varNombreProducto.get() == "" or varFechaLanzamiento.get() == "" or cmbDesarrollador.get() == "" or cmbCategoria.get() == "" or cmbTipo.get() == "" or cmbGanancias.get() == "":
+                        ms.showerror("Error","La casillas no pueden estar vacias")
+                    elif len(varFechaLanzamiento.get()) != 4 or (varFechaLanzamiento.get()).isdigit() == False:
+                        ms.showerror("Error","La fecha se ha ingresadp incorrectamente") 
+                    alta.focus()
 
             #nombre producto
         ttk.Label(alta,text="Producto").place(x=20,y=20)
@@ -73,9 +78,14 @@ def altaProducto():
             #fecha lanzamiento producto
         ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=260)
         ttk.Entry(alta,textvariable=varFechaLanzamiento).place(x=210,y=260)
+            
+            #combobox ganancias
+        ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=320)
+        cmbGanancias = ttk.Combobox(alta,state="readonly",values=("50","75","100","125","150"))
+        cmbGanancias.place(x=210,y=320)
 
             #buton confirmar compra
-        ttk.Button(alta,text="Confirmar",command=confirmarAlta).place(x=210,y=330)
+        ttk.Button(alta,text="Confirmar",command=confirmarAlta).place(x=210,y=390)
 
 #crea top level, el cual permite modificar datos de productos existentes y que son seleccionado del treview.
 def modificarProducto():
@@ -95,6 +105,7 @@ def modificarProducto():
             global cmbCategoria
             global cmbDesarrollador
             global cmbTipo
+            global cmbGanancias
             varProducto = ttk.StringVar(modificar,"")
             varFecha = ttk.StringVar(modificar,"")
 
@@ -141,8 +152,12 @@ def modificarProducto():
             ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
             ttk.Entry(modificar,textvariable=varFecha).place(x=210,y=260)
 
+            ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=320)
+            cmbGanancias = ttk.Combobox(modificar,state="readonly",values=("50","75","100","125","150"))
+            cmbGanancias.place(x=210,y=320)
+
                 #buton confirmar compra
-            ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=330)
+            ttk.Button(modificar,text="Confirmar",command=confirmarModificacion).place(x=210,y=390)
 
             lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
             for i in lstInventario:
@@ -152,6 +167,7 @@ def modificarProducto():
                     cmbCategoria.set(i["Categoria"])
                     cmbDesarrollador.set(i["Desarrollador"])
                     cmbTipo.set(i["Tipo"])
+                    cmbGanancias.set(i["Ganancias"])
         else:
             ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 #permite eliminar producto seleccionado en el treeview
