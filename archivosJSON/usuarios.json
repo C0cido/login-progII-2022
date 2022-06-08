@@ -1,1 +1,1 @@
-[{"IDUsuario": 0, "Usuario": "ARIEL", "Contra": "pbkdf2:sha256:260000$o0upAkD4hoz6eJqt$f4c6d2a0311695751769407ec07156e771e39fbea30ce4a0d4421cc8081771b9", "Inicio": false}]
+[{"IDUsuario": 0, "Usuario": "ARIEL", "Contra": "pbkdf2:sha256:260000$o0upAkD4hoz6eJqt$f4c6d2a0311695751769407ec07156e771e39fbea30ce4a0d4421cc8081771b9", "Inicio": false}, {"IDUsuario": 1, "Usuario": "SANTI", "Contra": "pbkdf2:sha256:260000$w56l2xYvYvWp4wVQ$0e93adb3f6f68a2050cab36195010ec4a076f33077cccb0e80c7009309a47c94", "Inicio": false}]

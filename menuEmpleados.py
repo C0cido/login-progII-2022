@@ -217,6 +217,31 @@ def Empleados():
     ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
     ttk.Label(menu,text="Lista empleados actual").place(x=20,y=60)
 
+    varBuscador = ttk.StringVar(menu,"")
+
+    #funcion para el buscador
+    def buscadorNombre(event):
+        lstEmpleados = fn.abrirArchivo("archivosJSON/empleados.json")
+        if varBuscador.get() != "":
+            for i in tblEmpleados.get_children():
+                tblEmpleados.delete(i)
+            for i in lstEmpleados:
+                if (varBuscador.get()).upper() in i["Nombre"]:
+                    tblEmpleados.insert("",ttk.END,text=i["IDEmpleado"],values=(i["Nombre"],i["DNI"],i["CUIT"],i["Sector"]))
+        else:
+            for i in tblEmpleados.get_children():
+                tblEmpleados.delete(i)
+            for i in lstEmpleados:
+                tblEmpleados.insert("",ttk.END,text=i["IDEmpleado"],values=(i["Nombre"],i["DNI"],i["CUIT"],i["Sector"]))
+
+    #buscador
+    entBuscador = ttk.Entry(menu,textvariable=varBuscador,width=50)
+    entBuscador.place(x=20,y=80)
+    entBuscador.insert(0,"Realize una busqueda por nombre de producto")
+    entBuscador.bind('<FocusIn>',lambda event: entBuscador.delete(0,"end") if varBuscador.get() == "Realize una busqueda por nombre de producto" else None)
+    entBuscador.bind('<FocusOut>',lambda event: entBuscador.insert(0,"Realize una busqueda por nombre de producto") if varBuscador.get() == "" else None)
+    entBuscador.bind('<KeyRelease>',buscadorNombre)
+
     #estructura de tabla(mostrar el inventario)
     global tblEmpleados
     tblEmpleados = ttk.Treeview(menu,columns=("col1","col2","col3","col4"),selectmode="browse")

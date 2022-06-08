@@ -212,6 +212,31 @@ def Deposito():
     ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
     ttk.Label(menu,text="Inventario actual").place(x=20,y=60)
 
+    varBuscador = ttk.StringVar(menu,"")
+
+    #funcion para el buscador
+    def buscadorNombre(event):
+        lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+        if varBuscador.get() != "":
+            for i in tblInventario.get_children():
+                tblInventario.delete(i)
+            for i in lstInventario:
+                if (varBuscador.get()).upper() in i["Producto"]:
+                    tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
+        else:
+            for i in tblInventario.get_children():
+                tblInventario.delete(i)
+            for i in lstInventario:
+                tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
+
+    #buscador
+    entBuscador = ttk.Entry(menu,textvariable=varBuscador,width=50)
+    entBuscador.place(x=20,y=80)
+    entBuscador.insert(0,"Realize una busqueda por nombre de producto")
+    entBuscador.bind('<FocusIn>',lambda event: entBuscador.delete(0,"end") if varBuscador.get() == "Realize una busqueda por nombre de producto" else None)
+    entBuscador.bind('<FocusOut>',lambda event: entBuscador.insert(0,"Realize una busqueda por nombre de producto") if varBuscador.get() == "" else None)
+    entBuscador.bind('<KeyRelease>',buscadorNombre)
+
     #estructura de tabla(mostrar el inventario)
     global tblInventario
     tblInventario = ttk.Treeview(menu,columns=("col1","col2","col3","col4","col5"),selectmode="browse")
