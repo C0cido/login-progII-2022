@@ -163,6 +163,7 @@ def Compras():
                 tblInventario.delete(i)
             for i in lstInventario:
                 tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Precio"],i["Cantidad"]))
+                
     #buscador
     entBuscador = ttk.Entry(menu,textvariable=varBuscador,width=50)
     entBuscador.place(x=20,y=80)
