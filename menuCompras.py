@@ -107,18 +107,18 @@ def confirmarComprar():
                 producto = {}
                 producto["IDProducto"] = tblCarrito.item(i)["text"]
                 producto["Producto"] = tblCarrito.item(i)["values"][0]
-                producto["Precio"] = float(tblCarrito.item(i)["values"][1])
+                producto["Precio"] = (float(tblCarrito.item(i)["values"][1])).__round__(2)
                 producto["Cantidad"] = int(tblCarrito.item(i)["values"][2])
                 for j in lstInventario:
                     if int(tblCarrito.item(i)["text"])== j["IDProducto"]:
                         j["Cantidad"] += tblCarrito.item(i)["values"][2]
-                        j["Precio"] = (float(tblCarrito.item(i)["values"][1])/int(tblCarrito.item(i)["values"][2]))*(1+j["Ganancias"]/100)
+                        j["Precio"] = ((float(tblCarrito.item(i)["values"][1])/int(tblCarrito.item(i)["values"][2]))*(1+j["Ganancias"]/100)).__round__(2)
                         with open("archivosJSON/inventario.json","w") as archivo:
                             json.dump(lstInventario,archivo)
                 lstCarrito.append(producto)
             nuevaCompra["IDCompra"] = fn.maximo(lstCompra,"IDCompra")
             nuevaCompra["Proveedor"] = cmbProveedor.get()
-            nuevaCompra["TotalPagar"] = float(varTotal.get())
+            nuevaCompra["TotalPagar"] = (float(varTotal.get())).__round__(2)
             nuevaCompra["MetodoPago"] = cmbMetodoPago.get()
             nuevaCompra["CompraRealizada"] = lstCarrito
             nuevaCompra["FechaCompra"] = datetime.datetime.strftime(datetime.datetime.now(),'%d/%m/%Y')
@@ -126,9 +126,14 @@ def confirmarComprar():
             with open("archivosJSON/compras.json","w") as compra:
                 json.dump(lstCompra,compra)
             lstCarrito.clear()
+            varBuscador.set("")
+            cmbMetodoPago.set("")
+            cmbProveedor.set("")
+            varTotal.set("")
             for i in tblCarrito.get_children():
                 tblCarrito.delete(i)
             actualizarTablaInventario()
+            ms.showinfo("Operacion Realizada","La compra se realizado con exito")
     else:
         if len(tblCarrito.get_children()) <= 0:
             ms.showerror("Error","No hay producto en el carrito")
@@ -143,6 +148,7 @@ def Compras():
 
     global varTotal
     varTotal = ttk.StringVar(menu,"0")
+    global varBuscador
     varBuscador = ttk.StringVar(menu,"")
 
     #label saludando al empleado
@@ -163,7 +169,7 @@ def Compras():
                 tblInventario.delete(i)
             for i in lstInventario:
                 tblInventario.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Precio"],i["Cantidad"]))
-                
+
     #buscador
     entBuscador = ttk.Entry(menu,textvariable=varBuscador,width=50)
     entBuscador.place(x=20,y=80)
