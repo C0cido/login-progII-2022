@@ -2,7 +2,7 @@ import json
 import ttkbootstrap as ttk
 import funciones as fn
 from tkinter import messagebox as ms
-import datetime as time
+import datetime
 
 
 global lstCarrito
@@ -83,8 +83,11 @@ def eliminarCarrito():
 def actualizarTablaCarrito():
     for i in tblCarrito.get_children():
         tblCarrito.delete(i)
+    suma = 0
     for i in lstCarrito:
         tblCarrito.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Precio"],i["Cantidad"]))
+        suma += (i["Precio"] * i["Cantidad"])
+    varTotal.set(suma)
 
 def actualizarTablaInventario():
     for i in tblInventario.get_children():
@@ -97,42 +100,46 @@ def actualizarTablaInventario():
 
 #fn que permite confirmar la compra y actualiza los datos en los respectivos archivos
 def confirmarComprar():
-    if len(tblCarrito.get_children()) > 0:
-        lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
-        lstVenta = fn.abrirArchivo("archivosJSON/ventas.json")
-        lstCarrito = []
-        nuevaVenta = {}
-        #Cambiar ganancia y proveedor hacer con un entry...
-        cliente = "Cualquiera"
-        total = 0
-        for i in tblCarrito.get_children():
-            producto = {}
-            producto["IDProducto"] = tblCarrito.item(i)["text"]
-            producto["Producto"] = tblCarrito.item(i)["values"][0]
-            producto["Precio"] = float(tblCarrito.item(i)["values"][1])
-            producto["Cantidad"] = int(tblCarrito.item(i)["values"][2])
-            total += (float(tblCarrito.item(i)["values"][1]) * int(tblCarrito.item(i)["values"][2]))
-            for j in lstInventario:
-                if int(tblCarrito.item(i)["text"])== j["IDProducto"]:
-                    j["Cantidad"] -= tblCarrito.item(i)["values"][2]
-                    j["Precio"] = float(tblCarrito.item(i)["values"][1])
-                    with open("archivosJSON/inventario.json","w") as archivo:
-                        json.dump(lstInventario,archivo)
-            lstCarrito.append(producto)
-        nuevaVenta["IDVenta"] = fn.maximo(lstVenta,"IDVenta")
-        nuevaVenta["Cliente"] = cliente
-        nuevaVenta["TotalACobrar"] = total
-        nuevaVenta["VentaRealizada"] = lstCarrito
-        nuevaVenta["FechaCompra"] = 2022
-        lstVenta.append(nuevaVenta)
-        with open("archivosJSON/ventas.json","w") as venta:
-            json.dump(lstVenta,venta)
-        lstCarrito.clear()
-        for i in tblCarrito.get_children():
-            tblCarrito.delete(i)
-        actualizarTablaInventario()
+    if len(tblCarrito.get_children()) > 0 and varCliente.get() != "" and cmbMetodoPago.get() != "":
+        if ms.askyesno("Atencion","¿Desea confirmar la venta?"):
+            lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
+            lstVenta = fn.abrirArchivo("archivosJSON/ventas.json")
+            lstCarrito = []
+            nuevaVenta = {}
+            for i in tblCarrito.get_children():
+                producto = {}
+                producto["IDProducto"] = tblCarrito.item(i)["text"]
+                producto["Producto"] = tblCarrito.item(i)["values"][0]
+                producto["Precio"] = float(tblCarrito.item(i)["values"][1])
+                producto["Cantidad"] = int(tblCarrito.item(i)["values"][2])
+                for j in lstInventario:
+                    if int(tblCarrito.item(i)["text"])== j["IDProducto"]:
+                        j["Cantidad"] -= tblCarrito.item(i)["values"][2]
+                        with open("archivosJSON/inventario.json","w") as archivo:
+                            json.dump(lstInventario,archivo)
+                lstCarrito.append(producto)
+            nuevaVenta["IDVenta"] = fn.maximo(lstVenta,"IDVenta")
+            nuevaVenta["Cliente"] = varCliente.get()
+            nuevaVenta["TotalACobrar"] = (float(varTotal.get())).__round__(2)
+            nuevaVenta["MetodoPago"] = cmbMetodoPago.get()
+            nuevaVenta["VentaRealizada"] = lstCarrito
+            nuevaVenta["FechaVenta"] = datetime.datetime.strftime(datetime.datetime.now(),'%d/%m/%Y')
+            lstVenta.append(nuevaVenta)
+            with open("archivosJSON/ventas.json","w") as venta:
+                json.dump(lstVenta,venta)
+            lstCarrito.clear()
+            varBuscador.set("")
+            cmbMetodoPago.set("")
+            varCliente.set("")
+            varTotal.set("")
+            for i in tblCarrito.get_children():
+                tblCarrito.delete(i)
+            actualizarTablaInventario()
     else:
-        ms.showerror("Error","No hay producto en el carrito")
+        if len(tblCarrito.get_children()) <= 0:
+            ms.showerror("Error","No hay producto en el carrito")
+        elif cmbMetodoPago.get() == "" or varCliente == "":
+            ms.showerror("Error","El metodo de pago y el cliente deben estar especificados")
 
 #fn que crea la ventana principal
 def Ventas():
@@ -146,7 +153,10 @@ def Ventas():
 
     global varTotal
     varTotal = ttk.StringVar(menu,"0")
+    global varBuscador
     varBuscador = ttk.StringVar(menu,"")
+    global varCliente
+    varCliente = ttk.StringVar(menu,"")
 
 
     #funcion para el buscador
@@ -209,9 +219,24 @@ def Ventas():
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarCarrito,width=20)
     btnEliminar.place(x=880,y=80)
 
+    #cmb metodo de pago
+    ttk.Label(menu,text="Metodo de Pago").place(x=650,y=320)
+    global cmbMetodoPago
+    cmbMetodoPago = ttk.Combobox(menu,state="readonly",values=("Efectivo","Credito","Debito"))
+    cmbMetodoPago.place(x=780,y=320)
+
+
+    #cmb proveedor
+    ttk.Label(menu,text="Cliente").place(x=650,y=360)
+    ttk.Entry(menu,textvariable=varCliente).place(x=780,y=360)
+
+    #entry total
+    ttk.Label(menu,text="Total a Pagar").place(x=650,y=400)
+    ttk.Entry(menu,textvariable=varTotal,state="disable",width=22).place(x=780,y=400)
+
     #button confirmar comprar
     btnConfirmar =ttk.Button(menu,text="Confirmar",command=confirmarComprar,width=20)
-    btnConfirmar.place(x=780,y=425)
+    btnConfirmar.place(x=780,y=460)
 
     menu.mainloop()
 Ventas()
