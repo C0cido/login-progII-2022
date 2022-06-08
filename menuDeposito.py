@@ -13,7 +13,7 @@ def altaProducto():
             alta.focus()
     except:
         alta = ttk.Toplevel(title="Alta")
-        alta.geometry("600x400")
+        alta.geometry("600x600")
         
         #variables
         varNombreProducto = ttk.StringVar(alta,"")
@@ -49,6 +49,7 @@ def altaProducto():
                     cmbCategoria.set("")
                     cmbDesarrollador.set("")
                     cmbTipo.set("")
+                    cmbGanancias.set("")
                 else:   
                     if varNombreProducto.get() == "" or varFechaLanzamiento.get() == "" or cmbDesarrollador.get() == "" or cmbCategoria.get() == "" or cmbTipo.get() == "" or cmbGanancias.get() == "":
                         ms.showerror("Error","La casillas no pueden estar vacias")
@@ -80,7 +81,7 @@ def altaProducto():
         ttk.Entry(alta,textvariable=varFechaLanzamiento).place(x=210,y=260)
             
             #combobox ganancias
-        ttk.Label(alta,text="Fecha de Lanzamiento").place(x=20,y=320)
+        ttk.Label(alta,text="% de ganancias").place(x=20,y=320)
         cmbGanancias = ttk.Combobox(alta,state="readonly",values=("50","75","100","125","150"))
         cmbGanancias.place(x=210,y=320)
 
@@ -96,7 +97,7 @@ def modificarProducto():
                 modificar.focus()
         except:
             modificar = ttk.Toplevel(title="Modificar")
-            modificar.geometry("600x400")
+            modificar.geometry("600x600")
 
         
             #variables
@@ -121,12 +122,18 @@ def modificarProducto():
                                 i["Categoria"] = cmbCategoria.get()
                                 i["Desarrollador"] = cmbDesarrollador.get()
                                 i["Tipo"] = cmbTipo.get()
+                                i["Ganancias"] = int(cmbGanancias.get())
+                                break
                         with open("archivosJSON/inventario.json","w") as archivo:
                             json.dump(lstInventario,archivo)
+                        ms.showinfo("Operacion realizada","Se ha modificado correctamente la información del producto")
                         actualizarTabla(tblInventario)  
                         modificar.destroy()                   
                 else:
-                    ms.showerror("Error","La casilla no pueden estar vacias")
+                    if varProducto.get() == "" or varFecha.get() == "" or cmbDesarrollador.get() == "" or cmbCategoria.get() == "" or cmbTipo.get() == "" or cmbGanancias.get() == "":
+                        ms.showerror("Error","La casillas no pueden estar vacias")
+                    elif len(varFecha.get()) != 4 or (varFecha.get()).isdigit() == False:
+                        ms.showerror("Error","La fecha se ha ingresado incorrectamente")
                     modificar.focus()
                             
                 #nombre producto
@@ -152,7 +159,7 @@ def modificarProducto():
             ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=260)
             ttk.Entry(modificar,textvariable=varFecha).place(x=210,y=260)
 
-            ttk.Label(modificar,text="Fecha de Lanzamiento").place(x=20,y=320)
+            ttk.Label(modificar,text="% de ganancias").place(x=20,y=320)
             cmbGanancias = ttk.Combobox(modificar,state="readonly",values=("50","75","100","125","150"))
             cmbGanancias.place(x=210,y=320)
 
@@ -168,8 +175,9 @@ def modificarProducto():
                     cmbDesarrollador.set(i["Desarrollador"])
                     cmbTipo.set(i["Tipo"])
                     cmbGanancias.set(i["Ganancias"])
-        else:
-            ms.showerror("Error","Por favor seleccione un elemento de la tabla")
+                    break
+    else:
+        ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 #permite eliminar producto seleccionado en el treeview
 def eliminarProducto():
     if  tblInventario.item(tblInventario.focus(), 'text') != "":
@@ -178,9 +186,11 @@ def eliminarProducto():
             for i in lstInventario:
                 if i["IDProducto"] == tblInventario.item(tblInventario.focus(), 'text'):
                     lstInventario.remove(i)
+                    break
             with open("archivosJSON/inventario.json","w") as archivo:
-                json.dump(lstInventario,archivo) 
+                json.dump(lstInventario,archivo)
             actualizarTabla(tblInventario)
+            ms.showinfo("Operacion realizada","Se ha eliminado correctamente la información del producto")
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
 
@@ -220,8 +230,6 @@ def Deposito():
     tblInventario.place(x=20,y=120)
     actualizarTabla(tblInventario)
 
-    #Activar botones a traves de la seleccion del treeview
-
     #button alta producto
     btnAlta = ttk.Button(menu,text="Alta Producto",command=altaProducto,width=20)
     btnAlta.place(x=900,y=120)
@@ -233,8 +241,6 @@ def Deposito():
     #button modificar producto
     btnEliminar = ttk.Button(menu,text="Eliminar Producto",command=eliminarProducto,width=20)
     btnEliminar.place(x=900,y=200)
-
-    #destruirPantalla()
 
     menu.mainloop()
 Deposito()
