@@ -4,6 +4,19 @@ import funciones as fn
 from tkinter import messagebox as ms
 from werkzeug.security import generate_password_hash
 
+def verificarCUIT(DNI,CUIT):
+    cont = 0
+    total = 0
+    try:
+        for i in CUIT:
+            if cont >=2 and cont <= 9:
+                if  i == DNI[total]:
+                    total+=1
+            cont += 1
+    except:
+        total = 0
+    return total
+
 
 #crea top level, el cual permite agregar existencia de productos.
 def altaEmpleado():
@@ -18,16 +31,16 @@ def altaEmpleado():
         #variables
         varNombre = ttk.StringVar(alta,"")
         varDNI = ttk.StringVar(alta,"")
-        varCUIL = ttk.StringVar(alta,"")
+        varCUIT = ttk.StringVar(alta,"")
 
             #funcion que permite agregar existencia de productos al inventario.
         def confirmarAlta():
                 alta.focus()
-                if len(varNombre.get())>0 and  len(varDNI.get()) == 8  and (varDNI.get()).isdigit() and len(varCUIL.get()) == 11 and (varCUIL.get()).isdigit() and cmbSector.get() != "":
+                if len(varNombre.get())>0 and  len(varDNI.get()) == 8  and (varDNI.get()).isdigit() and len(varCUIT.get()) == 11 and (varCUIT.get()).isdigit() and cmbSector.get() != "" and verificarCUIT(varDNI.get(),varCUIT.get()) == 8 and (varNombre.get()).isalpha():
                     #dar alta producto en inventario o sumarlo
                     lstEmpleados = fn.abrirArchivo("archivosJSON/empleados.json")
                     lstUsuarios = fn.abrirArchivo("archivosJSON/usuarios.json")
-                    if any((i["DNI"] == (varDNI.get()) or i["CUIL"] ==varCUIL.get()) for i in lstEmpleados):
+                    if any((i["DNI"] == (varDNI.get())) for i in lstEmpleados):
                         ms.showerror("Atencion","Ha ingresado informacion de un empleado ya existente")
                     else:
                         nuevoEmpleado = {}
@@ -35,7 +48,7 @@ def altaEmpleado():
                         nuevoEmpleado["IDEmpleado"] = idVinculado
                         nuevoEmpleado["Nombre"] = (varNombre.get()).upper()
                         nuevoEmpleado["DNI"] = varDNI.get()
-                        nuevoEmpleado["CUIL"] = varCUIL.get()
+                        nuevoEmpleado["CUIT"] = varCUIT.get()
                         nuevoEmpleado["Sector"] = cmbSector.get()
                         lstEmpleados.append(nuevoEmpleado)
                         with open("archivosJSON/empleados.json","w") as archivo:
@@ -49,14 +62,22 @@ def altaEmpleado():
                         with open("archivosJSON/usuarios.json","w") as archivo:
                             json.dump(lstUsuarios,archivo)
                         actualizarTabla(tblEmpleados)
-                        ms.showinfo("Operacion realizada","El registro de alta de producto se ha completado con exito")
+                        ms.showinfo("Operacion realizada","El registro de alta de empleados se ha completado con exito")
                     alta.focus()
                     varNombre.set("")
                     varDNI.set("")
-                    varCUIL.set("")
+                    varCUIT.set("")
                     cmbSector.set("")
                 else:   
-                    if ms.showerror("Error","La casillas no pueden estar vacias"):  alta.focus()
+                    if varNombre.get() == "" or varCUIT.get() == "" or varDNI.get()== ""  or cmbSector.get() == "":
+                        ms.showerror("Error","La casillas no pueden estar vacias")
+                    elif (varDNI.get()).isdigit() == False or (varCUIT.get()).isdigit() == False:
+                        ms.showerror("Error","El DNI o el CUIT solo puede ser numerica")
+                    elif verificarCUIT(varDNI.get(),varCUIT.get()) != 8:
+                        ms.showerror("Error","El CUIT se ha ingresado incorrectamente")
+                    elif (varNombre.get()).isalpha() == False:
+                        ms.showerror("Error","El nombre solo puede ser alfabetico")
+                    alta.focus()
 
             #nombre 
         ttk.Label(alta,text="Nombre").place(x=20,y=20)
@@ -67,8 +88,8 @@ def altaEmpleado():
         ttk.Entry(alta,textvariable=varDNI).place(x=210,y=80)
 
                 #cuil
-        ttk.Label(alta,text="CUIL").place(x=20,y=140)
-        ttk.Entry(alta,textvariable=varCUIL).place(x=210,y=140)
+        ttk.Label(alta,text="CUIT").place(x=20,y=140)
+        ttk.Entry(alta,textvariable=varCUIT).place(x=210,y=140)
 
                 #combobox sector
         ttk.Label(alta,text="Sector").place(x=20,y=200)
@@ -93,28 +114,35 @@ def modificarEmpleado():
             #variables
             global varNombre
             global varDNI
-            global varCUIL
+            global varCUIT
             global cmbSector
             varNombre = ttk.StringVar(modificar,"")
             varDNI = ttk.StringVar(modificar,"")
-            varCUIL = ttk.StringVar(modificar,"")
+            varCUIT = ttk.StringVar(modificar,"")
                 #funcion que permite modificar productos existentes en el inventario.
             def confirmarModificacion():
-                if len(varNombre.get())>0 and  len(varDNI.get()) == 8  and (varDNI.get()).isdigit() and len(varCUIL.get()) == 11 and (varCUIL.get()).isdigit() and cmbSector.get() != "":
+                if len(varNombre.get())>0 and  len(varDNI.get()) == 8  and (varDNI.get()).isdigit() and len(varCUIT.get()) == 11 and (varCUIT.get()).isdigit() and cmbSector.get() != "" and verificarCUIT(varDNI.get(),varCUIT.get())==8 and (varNombre.get()).isalpha():
                     if ms.askyesno("Atencion","¿Desea modificar el empleado seleccionado?"):
                         lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
                         for i in lstEmpleado:
                             if i["IDEmpleado"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                                 i["Nombre"] = (varNombre.get()).upper()
                                 i["DNI"] = varDNI.get()
-                                i["CUIL"] = varCUIL.get()
+                                i["CUIT"] = varCUIT.get()
                                 i["Sector"] = cmbSector.get()
                         with open("archivosJSON/empleados.json","w") as archivo:
                             json.dump(lstEmpleado,archivo)
                         actualizarTabla(tblEmpleados)  
                         modificar.destroy()                   
                 else:
-                    ms.showerror("Error","La casilla no pueden estar vacias")
+                    if varNombre.get() == "" or varCUIT.get() == "" or varDNI.get()== ""  or cmbSector.get() == "":
+                        ms.showerror("Error","La casillas no pueden estar vacias")
+                    elif (varDNI.get()).isdigit() == False or (varCUIT.get()).isdigit() == False:
+                        ms.showerror("Error","El DNI o el CUIT solo puede ser numerica")
+                    elif verificarCUIT(varDNI.get(),varCUIT.get()) != 8:
+                        ms.showerror("Error","El CUIT se ha ingresado incorrectamente")
+                    elif (varNombre.get()).isalpha() == False:
+                        ms.showerror("Error","El nombre solo puede ser alfabetico")
                     modificar.focus()
                             
                 #nombre 
@@ -126,8 +154,8 @@ def modificarEmpleado():
             ttk.Entry(modificar,textvariable=varDNI).place(x=210,y=80)
 
                 #cuil
-            ttk.Label(modificar,text="CUIL").place(x=20,y=140)
-            ttk.Entry(modificar,textvariable=varCUIL).place(x=210,y=140)
+            ttk.Label(modificar,text="CUIT").place(x=20,y=140)
+            ttk.Entry(modificar,textvariable=varCUIT).place(x=210,y=140)
 
                 #combobox sector
             ttk.Label(modificar,text="Sector").place(x=20,y=200)
@@ -143,7 +171,7 @@ def modificarEmpleado():
                 if i["IDEmpleado"] == tblEmpleados.item(tblEmpleados.focus(), 'text'):
                     varNombre.set(i["Nombre"])
                     varDNI.set(i["DNI"])
-                    varCUIL.set(i["CUIL"])
+                    varCUIT.set(i["CUIT"])
                     cmbSector.set(i["Sector"])
     else:
         ms.showerror("Error","Por favor seleccione un elemento de la tabla")
@@ -173,7 +201,7 @@ def actualizarTabla(tbl):
         tbl.delete(i)
     lstInventario = fn.abrirArchivo("archivosJSON/empleados.json")
     for i in lstInventario:
-        tbl.insert("",ttk.END,text=i["IDEmpleado"],values=(i["Nombre"],i["DNI"],i["CUIL"],i["Sector"]))
+        tbl.insert("",ttk.END,text=i["IDEmpleado"],values=(i["Nombre"],i["DNI"],i["CUIT"],i["Sector"]))
 
 #estructura del menu de compras
 def Empleados():
@@ -196,7 +224,7 @@ def Empleados():
     tblEmpleados.heading("#0", anchor=ttk.CENTER, text="ID")
     tblEmpleados.heading("col1", anchor=ttk.CENTER, text="Empleado")
     tblEmpleados.heading("col2", anchor=ttk.CENTER, text="DNI")
-    tblEmpleados.heading("col3", anchor=ttk.CENTER, text="CUIL")
+    tblEmpleados.heading("col3", anchor=ttk.CENTER, text="CUIT")
     tblEmpleados.heading("col4", anchor=ttk.CENTER, text="Sector")
     tblEmpleados.place(x=20,y=120)
     actualizarTabla(tblEmpleados)

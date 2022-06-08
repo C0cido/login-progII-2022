@@ -1,1 +1,0 @@
-[{"IDVenta": 0, "Cliente": "Cualquiera", "TotalACobrar": 12000.0, "VentaRealizada": [{"IDProducto": 3, "Producto": " ELDEN RING", "Precio": 2400.0, "Cantidad": 5}], "FechaCompra": 2022}, {"IDVenta": 1, "Cliente": "Cualquiera", "TotalACobrar": 6000.0, "VentaRealizada": [{"IDProducto": 2, "Producto": "SEA OF THIEVES", "Precio": 2000.0, "Cantidad": 3}], "FechaCompra": 2022}]
