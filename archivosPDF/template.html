@@ -1,0 +1,67 @@
+<h2>Factura</h2>
+<div class="row my-3">
+<div class="col-10">
+<h1>GameStore</h1>
+</div>
+</div>
+<hr />
+<div class="row fact-info mt-3">
+<div class="col-3">
+<h5>Facturar a: {{Cliente}}</h5>
+</div>
+<div class="col-3">
+<h5 style="text-align: left;">Enviar a: {{CorreoCliente}}</h5>
+</div>
+<div class="col-3">
+<h5>Num. de factura: {{IDVenta}}</h5>
+<h5>Fecha: {{FechaVenta}}</h5>
+</div>
+</div>
+<div class="row my-5">
+<table class="table table-borderless factura" style="width: 473px; height: 144px;">
+<thead>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">Producto | Precio | Cantidad | Importe</th>
+</tr>
+</thead>
+<tfoot>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto1}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto2}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto3}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto4}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto5}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto6}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto7}}</th>
+</tr>
+<tr>
+<th style="width: 463px; text-align: center;">{{Producto8}}</th>
+</tr>
+<tr>
+<th style="width: 463px; text-align: center;">{{Producto9}}</th>
+</tr>
+<tr>
+<th style="width: 463px; text-align: center;">{{Producto10}}</th>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="cond row">
+<div class="col-12 mt-3">
+<h4>Total Factura: ${{TotalACobrar}}</h4>
+<h4>Formas de pago: {{MetodoPago}}</h4>
+<p>&nbsp;</p>
+</div>
+</div>
