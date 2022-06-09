@@ -13,40 +13,55 @@
 <h5 style="text-align: left;">Enviar a: {{CorreoCliente}}</h5>
 </div>
 <div class="col-3">
-<h5>N&deg; de factura: {{IDVenta}}</h5>
+<h5>Num. de factura: {{IDVenta}}</h5>
 <h5>Fecha: {{FechaVenta}}</h5>
 </div>
 </div>
 <div class="row my-5">
-<table class="table table-borderless factura">
+<table class="table table-borderless factura" style="width: 473px; height: 144px;">
 <thead>
-<tr>
-<th style="width: 114.031px;">Cant.</th>
-<th style="width: 119.547px;">Producto</th>
-<th style="width: 98.4531px;">Precio Unitario</th>
-<th style="width: 149.969px;">Importe</th>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">Producto | Precio | Cantidad | Importe</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="width: 114.031px;">{{IDProducto}}</td>
-<td style="width: 119.547px;">{{Producto}}</td>
-<td style="width: 98.4531px;">{{Precio}}</td>
-<td style="width: 149.969px;">{{Calculo}}</td>
-</tr>
-</tbody>
 <tfoot>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto1}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto2}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto3}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto4}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto5}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto6}}</th>
+</tr>
+<tr style="height: 18px;">
+<th style="width: 463px; text-align: center; height: 18px;">{{Producto7}}</th>
+</tr>
 <tr>
-<th style="width: 114.031px;">&nbsp;</th>
-<th style="width: 119.547px;">&nbsp;</th>
-<th style="width: 98.4531px;">Total Factura</th>
-<th style="width: 149.969px;">${{TotalACobrar}}</th>
+<th style="width: 463px; text-align: center;">{{Producto8}}</th>
+</tr>
+<tr>
+<th style="width: 463px; text-align: center;">{{Producto9}}</th>
+</tr>
+<tr>
+<th style="width: 463px; text-align: center;">{{Producto10}}</th>
 </tr>
 </tfoot>
 </table>
 </div>
 <div class="cond row">
 <div class="col-12 mt-3">
+<h4>Total Factura: ${{TotalACobrar}}</h4>
 <h4>Formas de pago: {{MetodoPago}}</h4>
+<p>&nbsp;</p>
 </div>
 </div>
