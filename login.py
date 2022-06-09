@@ -24,6 +24,14 @@ varNombre = ttk.StringVar(pantalla,nombre)
 varContra = ttk.StringVar(pantalla,"")
 varRecordar = ttk.BooleanVar(pantalla,guardar) 
 
+def deleteAll():
+    lblNombre.destroy()
+    entNombre.destroy()
+    lblContra.destroy()
+    entContra.destroy()
+    chkRecordar.destroy()
+    btnCargar.destroy()
+
 #funciones
 def recordar():
     if varRecordar.get():
@@ -49,17 +57,18 @@ def login():
         if encontrado:
             if inicio:
                 recordar()
+                deleteAll()
                 lstEmpleado = fn.abrirArchivo("archivosJSON/empleados.json")
                 for i in lstEmpleado:
                     if i["IDEmpleado"] == idBuscar:
                         if i["Sector"] == "Deposito":
-                            Deposito()
+                            Deposito(pantalla)
                         elif i["Sector"] == "Empleados":
-                            Empleados()
+                            Empleados(pantalla)
                         elif i["Sector"] == "Compras":
-                            Compras()
+                            Compras(pantalla)
                         elif i["Sector"] == "Ventas":
-                            Ventas()
+                            Ventas(pantalla)
                         break
             else:
                 global cambiar  
@@ -107,17 +116,20 @@ def login():
 
 
 #Nombre
-ttk.Label(pantalla,text="Nombre").place(x=20,y=20)
+lblNombre = ttk.Label(pantalla,text="Usuario")
+lblNombre.place(x=20,y=20)
 entNombre = ttk.Entry(pantalla,textvariable=varNombre)
 entNombre.place(x=150,y=20)
 
 #contra
-ttk.Label(pantalla,text="Contra").place(x=20,y=80)
+lblContra=ttk.Label(pantalla,text="Contraseña")
+lblContra.place(x=20,y=80)
 entContra = ttk.Entry(pantalla,textvariable=varContra)
 entContra.place(x=150,y=80)
 
 #Recordarme
-ttk.Checkbutton(pantalla,text="Recordarme",variable=varRecordar,offvalue=False,onvalue=True).place(x=130,y=130)
+chkRecordar=ttk.Checkbutton(pantalla,text="Recordarme",variable=varRecordar,offvalue=False,onvalue=True)
+chkRecordar.place(x=130,y=130)
 
 #buton cargar datos
 btnCargar = ttk.Button(pantalla,command=login,text="Loguear")

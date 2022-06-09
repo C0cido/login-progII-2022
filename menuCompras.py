@@ -141,9 +141,8 @@ def confirmarComprar():
             ms.showerror("Error","El metodo de pago y el proveedor deben estar seleccionados")
 
 #fn que crea la ventana principal
-def Compras():
-    menu = ttk.Window()
-    menu.geometry("1200x500")
+def Compras(menu):
+    menu.geometry("1200x600")
     menu.title("AMC Compras")
 
     global varTotal
@@ -217,24 +216,24 @@ def Compras():
     btnEliminar.place(x=880,y=80)
 
     #cmb metodo de pago
-    ttk.Label(menu,text="Metodo de Pago").place(x=650,y=320)
+    ttk.Label(menu,text="Metodo de Pago").place(x=650,y=380)
     global cmbMetodoPago
     cmbMetodoPago = ttk.Combobox(menu,state="readonly",values=("Efectivo","Credito","Debito"))
-    cmbMetodoPago.place(x=780,y=320)
+    cmbMetodoPago.place(x=780,y=380)
 
 
     #cmb proveedor
-    ttk.Label(menu,text="Proveedor").place(x=650,y=360)
+    ttk.Label(menu,text="Proveedor").place(x=650,y=440)
     global cmbProveedor
     cmbProveedor = ttk.Combobox(menu,state="readonly",values=(fn.abrirArchivo("archivosJSON/proveedor.json")))
-    cmbProveedor.place(x=780,y=360)
+    cmbProveedor.place(x=780,y=440)
 
     #entry total
-    ttk.Label(menu,text="Total a Pagar").place(x=650,y=400)
-    ttk.Entry(menu,textvariable=varTotal,state="disable",width=22).place(x=780,y=400)
+    ttk.Label(menu,text="Total a Pagar").place(x=650,y=500)
+    ttk.Entry(menu,textvariable=varTotal,state="disable",width=22).place(x=780,y=500)
 
     #button confirmar comprar
     btnConfirmar =ttk.Button(menu,text="Confirmar",command=confirmarComprar,width=20)
-    btnConfirmar.place(x=780,y=460)
+    btnConfirmar.place(x=780,y=540)
 
     menu.mainloop()

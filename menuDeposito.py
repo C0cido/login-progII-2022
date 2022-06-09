@@ -203,8 +203,7 @@ def actualizarTabla(tbl):
         tbl.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Desarrollador"],i["Tipo"],i["Precio"],i["Cantidad"]))
 
 #estructura del menu de compras
-def Deposito():
-    menu = ttk.Window()
+def Deposito(menu):
     menu.geometry("1200x500")
     menu.title("AMC STOCK")
 

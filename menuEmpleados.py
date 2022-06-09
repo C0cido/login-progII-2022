@@ -208,8 +208,7 @@ def actualizarTabla(tbl):
         tbl.insert("",ttk.END,text=i["IDEmpleado"],values=(i["Nombre"],i["DNI"],i["CUIT"],i["Sector"]))
 
 #estructura del menu de compras
-def Empleados():
-    menu = ttk.Window()
+def Empleados(menu):
     menu.geometry("1200x500")
     menu.title("AMC EMPLEADOS")
 
