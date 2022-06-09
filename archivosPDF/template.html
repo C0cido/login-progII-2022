@@ -1,0 +1,52 @@
+<h2>Factura</h2>
+<div class="row my-3">
+<div class="col-10">
+<h1>GameStore</h1>
+</div>
+</div>
+<hr />
+<div class="row fact-info mt-3">
+<div class="col-3">
+<h5>Facturar a: {{Cliente}}</h5>
+</div>
+<div class="col-3">
+<h5 style="text-align: left;">Enviar a: {{CorreoCliente}}</h5>
+</div>
+<div class="col-3">
+<h5>N&deg; de factura: {{IDVenta}}</h5>
+<h5>Fecha: {{FechaVenta}}</h5>
+</div>
+</div>
+<div class="row my-5">
+<table class="table table-borderless factura">
+<thead>
+<tr>
+<th style="width: 114.031px;">Cant.</th>
+<th style="width: 119.547px;">Producto</th>
+<th style="width: 98.4531px;">Precio Unitario</th>
+<th style="width: 149.969px;">Importe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="width: 114.031px;">{{IDProducto}}</td>
+<td style="width: 119.547px;">{{Producto}}</td>
+<td style="width: 98.4531px;">{{Precio}}</td>
+<td style="width: 149.969px;">{{Calculo}}</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<th style="width: 114.031px;">&nbsp;</th>
+<th style="width: 119.547px;">&nbsp;</th>
+<th style="width: 98.4531px;">Total Factura</th>
+<th style="width: 149.969px;">${{TotalACobrar}}</th>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="cond row">
+<div class="col-12 mt-3">
+<h4>Formas de pago: {{MetodoPago}}</h4>
+</div>
+</div>
