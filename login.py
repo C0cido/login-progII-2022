@@ -11,7 +11,7 @@ from menuVentas import Ventas
 
 pantalla = ttk.Window()
 pantalla.title("Login de usuarios")
-pantalla.geometry("400x300")
+pantalla.geometry("400x400")
 
 #Recordar contraseña
 lstRecordar = fn.abrirArchivo("recordarme.json")
@@ -31,6 +31,7 @@ def deleteAll():
     entContra.destroy()
     chkRecordar.destroy()
     btnCargar.destroy()
+    lblAviso.destroy()
 
 #funciones
 def recordar():
@@ -88,12 +89,18 @@ def login():
                             lstUsuario = fn.abrirArchivo("archivosJSON/usuarios.json")
                             for i in lstUsuario:
                                 if i["IDUsuario"] == idBuscar:
-                                    i["Contra"] = generate_password_hash(varNueva.get())
-                                    i["Inicio"] =True
-                            cambiar.destroy()
-                            ms.showinfo("Operacion realizada","El cambio de contraseña se ha realizado correctamente. Por favor ingrese nuevamente")
-                            with open("archivosJSON/usuarios.json","w") as archivo:
-                                json.dump(lstUsuario,archivo)
+                                    if check_password_hash(i["Contra"],varNueva.get()) == False:
+                                        i["Contra"] = generate_password_hash(varNueva.get())
+                                        i["Inicio"] =True
+                                        cambiar.destroy()
+                                        ms.showinfo("Operacion realizada","El cambio de contraseña se ha realizado correctamente. Por favor ingrese nuevamente")
+                                        with open("archivosJSON/usuarios.json","w") as archivo:
+                                            json.dump(lstUsuario,archivo)
+                                    else:
+                                        contraRepetida = True
+                            if contraRepetida:
+                                ms.showerror("Error","La contraseña es igual a la anterior. Por favor, ingrese una contraseña distinta")
+                                cambiar.focus()
                         else:
                             if varNueva.get() == "" or varRepetir.get() == "":
                                 ms.showerror("Error","Las casillas no pueden estar vacias")
@@ -134,6 +141,9 @@ chkRecordar.place(x=130,y=130)
 #buton cargar datos
 btnCargar = ttk.Button(pantalla,command=login,text="Loguear")
 btnCargar.place(x=150,y=180)
+
+lblAviso = ttk.Label(pantalla,text="Si ingresa por primera vez\nSu contraseña es su DNI")
+lblAviso.place(x=20,y=260)
 
 #Inciar
 pantalla.mainloop()

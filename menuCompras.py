@@ -142,7 +142,7 @@ def confirmarComprar():
 
 #fn que crea la ventana principal
 def Compras(menu):
-    menu.geometry("1200x600")
+    menu.geometry("1200x700")
     menu.title("AMC Compras")
 
     global varTotal
@@ -151,7 +151,7 @@ def Compras(menu):
     varBuscador = ttk.StringVar(menu,"")
 
     #label saludando al empleado
-    ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
+    ttk.Label(menu,text="Bienvenido").place(x=20,y=0)
     ttk.Label(menu,text="Inventario actual").place(x=20,y=40)
 
     #funcion para el buscador
@@ -216,24 +216,24 @@ def Compras(menu):
     btnEliminar.place(x=880,y=80)
 
     #cmb metodo de pago
-    ttk.Label(menu,text="Metodo de Pago").place(x=650,y=380)
+    ttk.Label(menu,text="Metodo Pago").place(x=650,y=480)
     global cmbMetodoPago
     cmbMetodoPago = ttk.Combobox(menu,state="readonly",values=("Efectivo","Credito","Debito"))
-    cmbMetodoPago.place(x=780,y=380)
+    cmbMetodoPago.place(x=780,y=480)
 
 
     #cmb proveedor
-    ttk.Label(menu,text="Proveedor").place(x=650,y=440)
+    ttk.Label(menu,text="Proveedor").place(x=650,y=540)
     global cmbProveedor
     cmbProveedor = ttk.Combobox(menu,state="readonly",values=(fn.abrirArchivo("archivosJSON/proveedor.json")))
-    cmbProveedor.place(x=780,y=440)
+    cmbProveedor.place(x=780,y=540)
 
     #entry total
-    ttk.Label(menu,text="Total a Pagar").place(x=650,y=500)
-    ttk.Entry(menu,textvariable=varTotal,state="disable",width=22).place(x=780,y=500)
+    ttk.Label(menu,text="Total a Pagar").place(x=650,y=600)
+    ttk.Entry(menu,textvariable=varTotal,state="disable",width=22).place(x=780,y=600)
 
     #button confirmar comprar
     btnConfirmar =ttk.Button(menu,text="Confirmar",command=confirmarComprar,width=20)
-    btnConfirmar.place(x=780,y=540)
+    btnConfirmar.place(x=780,y=640)
 
     menu.mainloop()
