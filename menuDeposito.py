@@ -22,7 +22,7 @@ def altaProducto():
             #funcion que permite agregar existencia de productos al inventario.
         def confirmarAlta():
                 alta.focus()
-                if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4  and cmbDesarrollador.get() != ""and cmbGanancias.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" and (varFechaLanzamiento.get()).isdigit():
+                if len(varNombreProducto.get())>0 and  len(varFechaLanzamiento.get()) == 4 and cmbDesarrollador.get() != ""and cmbGanancias.get() != "" and cmbTipo.get() != "" and cmbCategoria.get() != "" and (varFechaLanzamiento.get()).isdigit():
                     #dar alta producto en inventario o sumarlo
                     lstInventario = fn.abrirArchivo("archivosJSON/inventario.json")
                     if any((i["Producto"] == (varNombreProducto.get()).upper() and i["Desarrollador"] == cmbDesarrollador.get() and i["Tipo"] == cmbTipo.get()) for i in lstInventario):
@@ -53,7 +53,7 @@ def altaProducto():
                 else:   
                     if varNombreProducto.get() == "" or varFechaLanzamiento.get() == "" or cmbDesarrollador.get() == "" or cmbCategoria.get() == "" or cmbTipo.get() == "" or cmbGanancias.get() == "":
                         ms.showerror("Error","La casillas no pueden estar vacias")
-                    elif len(varFechaLanzamiento.get()) != 4 or (varFechaLanzamiento.get()).isdigit() == False:
+                    elif len(varFechaLanzamiento.get()) != 4 or (varFechaLanzamiento.get()).isdigit() == False or int(varFechaLanzamiento.get()) > 2022:
                         ms.showerror("Error","La fecha se ha ingresadp incorrectamente") 
                     alta.focus()
 
