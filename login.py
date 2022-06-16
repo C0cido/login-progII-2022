@@ -87,17 +87,17 @@ def login():
                     def confirmarContra():
                         if varNueva.get() != "" and varRepetir.get() != ""  and varRepetir.get() == varNueva.get():
                             lstUsuario = fn.abrirArchivo("archivosJSON/usuarios.json")
+                            contraRepetida=True
                             for i in lstUsuario:
                                 if i["IDUsuario"] == idBuscar:
                                     if check_password_hash(i["Contra"],varNueva.get()) == False:
+                                        contraRepetida=False
                                         i["Contra"] = generate_password_hash(varNueva.get())
                                         i["Inicio"] =True
                                         cambiar.destroy()
                                         ms.showinfo("Operacion realizada","El cambio de contraseña se ha realizado correctamente. Por favor ingrese nuevamente")
                                         with open("archivosJSON/usuarios.json","w") as archivo:
                                             json.dump(lstUsuario,archivo)
-                                    else:
-                                        contraRepetida = True
                             if contraRepetida:
                                 ms.showerror("Error","La contraseña es igual a la anterior. Por favor, ingrese una contraseña distinta")
                                 cambiar.focus()
