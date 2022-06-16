@@ -9,7 +9,7 @@ global lstCarrito
 lstCarrito = []
 
     
-#fn crea top level que permite agregar la informacion ha agregar en el carrito 
+#fn crea top level que permite agregar la informacion en el carrito 
 def agregarCarrito():
     if  tblInventario.item(tblInventario.focus(), 'text') != "":
         if ms.askyesno("Atencion","¿Desea agregar el producto seleccionado?"):
