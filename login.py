@@ -142,7 +142,7 @@ chkRecordar.place(x=130,y=130)
 btnCargar = ttk.Button(pantalla,command=login,text="Loguear")
 btnCargar.place(x=150,y=180)
 
-lblAviso = ttk.Label(pantalla,text="Si ingresa por primera vez\nSu contraseña es su DNI")
+lblAviso = ttk.Label(pantalla,text="Si ingresa por primera vez,\nsu contraseña es su DNI")
 lblAviso.place(x=20,y=260)
 
 #Inciar
