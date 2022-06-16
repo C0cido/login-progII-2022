@@ -169,9 +169,9 @@ def Compras(menu):
     entBuscador = ttk.Entry(menu,textvariable=varBuscador,width=50)
     entBuscador.place(x=20,y=80)
     entBuscador.insert(0,"Realize una busqueda por nombre de producto")
-    entBuscador.bind('<FocusIn>',lambda event: entBuscador.delete(0,"end") if varBuscador.get() == "Realize una busqueda por nombre de producto" else None)
-    entBuscador.bind('<FocusOut>',lambda event: entBuscador.insert(0,"Realize una busqueda por nombre de producto") if varBuscador.get() == "" else None)
-    entBuscador.bind('<KeyRelease>',buscadorNombre)
+    entBuscador.bind('<FocusIn>',lambda event: entBuscador.delete(0,"end") if varBuscador.get() == "Realize una busqueda por nombre de producto" else None)     #Si se hace click en el entry, deja de mostrar el mensaje por defecto
+    entBuscador.bind('<FocusOut>',lambda event: entBuscador.insert(0,"Realize una busqueda por nombre de producto") if varBuscador.get() == "" else None)       #Si no se hace click en el entry, muestra el mensaje por defecto
+    entBuscador.bind('<KeyRelease>',buscadorNombre)                                                                                                             #Ejecuta la función "buscadorNnombre"
 
 
     #estructura de tabla(mostrar el inventario)
