@@ -208,8 +208,8 @@ def Deposito(menu):
     menu.title("AMC STOCK")
 
     #label saludando al empleado
-    ttk.Label(menu,text="Bienvenido").place(x=20,y=20)
-    ttk.Label(menu,text="Inventario actual").place(x=20,y=60)
+    ttk.Label(menu,text="Bienvenido").place(x=20,y=0)
+    ttk.Label(menu,text="Inventario actual").place(x=20,y=40)
 
     varBuscador = ttk.StringVar(menu,"")
 
