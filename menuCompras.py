@@ -81,7 +81,7 @@ def actualizarTablaCarrito():                                                   
     for i in lstCarrito:
         tblCarrito.insert("",ttk.END,text=i["IDProducto"],values=(i["Producto"],i["Precio"],i["Cantidad"]))                                             #Se actualiza el carrito insertando los productos con sus claves y se suman los precios
         suma += i["Precio"]
-    varTotal.set(suma)                                                                                                                                  #Se asigna la el resultado de la suma a la variable varTotal
+    varTotal.set(suma)                                                                                                                                  #Se asigna el resultado de la suma a la variable varTotal
 
 def actualizarTablaInventario():                                                                                                                        #Función para actualizar el inventario
     for i in tblInventario.get_children():                                                                                                              
